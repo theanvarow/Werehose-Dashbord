@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html><body>
+<script>
+fetch("https://docs.google.com/spreadsheets/d/1GJDL9RKu8CHZDmsm9W9ahtU5P2rsQ5ngAknbkomZwkQ/gviz/tq?tqx=out:csv&sheet=%D0%9C%D0%B0%D1%80%D1%82")
+.then(r => r.text())
+.then(t => console.log("SUCCESS:", t.substring(0, 50)))
+.catch(e => console.error("ERROR:", e));
+</script>
+</body></html>

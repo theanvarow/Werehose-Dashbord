@@ -1,0 +1,81 @@
+Google Sheets uchun 2 xil qator turi ishlaydi:
+
+1. shift
+Dashboarddagi 4 smena boshliqlari KPI ma'lumotlari uchun.
+
+2. table
+Screenshotdagidek katta jadval uchun.
+
+Ustunlar:
+
+entry_type
+month
+shift_key
+name
+role
+employees
+errors
+placed
+ops
+usage
+status
+bestZone
+score
+monthStatus
+focus
+action
+recountManager
+recountOps
+placementManager1
+placementOps1
+placementManager2
+placementOps2
+actClosedZero
+recountErrors
+placementErrors
+botUsageStats
+wrongCategoryPlacement
+accuracy
+speed
+scan
+plan
+section_name
+shift_label
+leader_name
+ops_weight
+ops_base
+sla_weight
+sla_base
+errors_weight
+errors_base
+total
+fact_ops
+fact_sla
+fact_errors
+norm_ops
+norm_sla
+norm_errors
+
+Qanday to'ldiriladi:
+shift qatorlarida faqat shift KPI ustunlarini to'ldirasiz.
+table qatorlarida esa section_name, shift_label, leader_name va jadval KPI ustunlarini to'ldirasiz.
+month ustuni orqali qaysi oyga tegishli ekanini belgilaysiz.
+shift_key faqat shift qatorlari uchun kerak: shift1, shift2, shift3, shift4.
+
+
+Yangi ustunlar:
+recountManager - пересчет менеджер F.I.O.
+recountOps - пересчет bo'yicha OPS soni.
+
+placementManager1 - размещение менеджер 1 F.I.O.
+placementOps1 - OPS размещения 1.
+placementManager2 - размещение менеджер 2 F.I.O.
+placementOps2 - OPS размещения 2.
+
+actClosedZero - Акт закрыт с нулевым soni.
+
+recountErrors - Ошибки Пересчет soni.
+placementErrors - Ошибки размещения soni.
+
+botUsageStats - Статистика использования бота foizda.
+wrongCategoryPlacement - Размещены неправильные категории foizda.

@@ -1,0 +1,3277 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Складской дашборд сменных начальников</title>
+    <style>
+        :root {
+            --bg: #090c11;
+            --bg-2: #0f141c;
+            --panel: rgba(18, 24, 34, 0.9);
+            --panel-2: rgba(22, 30, 43, 0.94);
+            --panel-3: rgba(14, 19, 28, 0.88);
+            --line: rgba(255, 255, 255, 0.08);
+            --text: #f3f6fb;
+            --muted: #91a0b8;
+            --accent: #ff9330;
+            --accent-2: #f5b14f;
+            --blue: #57b3ff;
+            --cyan: #42d7c6;
+            --green: #37d89d;
+            --red: #ff6d6d;
+            --yellow: #ffd36a;
+            --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+            --radius: 28px;
+            --avatar-ring: linear-gradient(135deg, rgba(255, 147, 48, 0.9), rgba(66, 215, 198, 0.8));
+            --shift-glow: rgba(255, 147, 48, 0.18);
+            --font-main: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+            --font-display: "Arial Black", "Segoe UI", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--text);
+            font-family: var(--font-main);
+            background:
+                radial-gradient(circle at 12% 18%, rgba(255, 147, 48, 0.13), transparent 24%),
+                radial-gradient(circle at 90% 12%, rgba(87, 179, 255, 0.12), transparent 20%),
+                radial-gradient(circle at 70% 80%, rgba(66, 215, 198, 0.09), transparent 22%),
+                linear-gradient(180deg, #11161e 0%, #07090d 100%);
+            padding: 24px;
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            inset: auto;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::before {
+            width: 480px;
+            height: 480px;
+            left: -160px;
+            top: -120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 147, 48, 0.1), transparent 68%);
+            filter: blur(8px);
+        }
+
+        body::after {
+            width: 520px;
+            height: 520px;
+            right: -220px;
+            bottom: -180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(87, 179, 255, 0.1), transparent 68%);
+            filter: blur(10px);
+        }
+
+        @keyframes float-soft {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 147, 48, 0);
+            }
+
+            50% {
+                box-shadow: 0 0 0 16px rgba(255, 147, 48, 0.05);
+            }
+        }
+
+
+        @keyframes border-spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 0.35;
+                transform: scale(0.92);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes mast-lift {
+
+            0%,
+            12% {
+                transform: translateY(0);
+            }
+
+            45%,
+            68% {
+                transform: translateY(-112px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fork-lift {
+
+            0%,
+            12% {
+                transform: translateY(0);
+            }
+
+            45%,
+            68% {
+                transform: translateY(-112px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes truck-rock {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+
+        @keyframes wheel-spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes cargo-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+            }
+
+            50% {
+                box-shadow: 0 10px 26px rgba(255, 171, 77, 0.28);
+            }
+        }
+
+
+        @keyframes draw-line {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes reveal-area {
+            0% {
+                opacity: 0;
+                transform: scaleY(0.2);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scaleY(1);
+            }
+        }
+
+        @keyframes pop-point {
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes pulse-point {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 4px rgba(255, 177, 93, 0.08), 0 0 10px rgba(255, 147, 48, 0.18);
+            }
+
+            50% {
+                box-shadow: 0 0 0 10px rgba(255, 177, 93, 0.02), 0 0 18px rgba(255, 147, 48, 0.32);
+            }
+        }
+
+
+        @keyframes dyn-scan {
+            0% {
+                left: 20px;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                left: calc(100% - 20px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes dyn-fill-rise {
+            0% {
+                transform: scaleY(0.2);
+                opacity: 0.35;
+            }
+
+            100% {
+                transform: scaleY(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes dyn-bot-run {
+            0% {
+                left: -52px;
+            }
+
+            100% {
+                left: calc(100% - 30px);
+            }
+        }
+
+        @keyframes reach-drive {
+            0% {
+                left: -42px;
+            }
+
+            100% {
+                left: 214px;
+            }
+        }
+
+        @keyframes cargo-lift {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-18px);
+            }
+        }
+
+        @keyframes scan {
+            0% {
+                transform: translateX(-24px);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateX(110%);
+                opacity: 0;
+            }
+        }
+
+
+        @keyframes belt-move {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 120px 0;
+            }
+        }
+
+        @keyframes package-run {
+            0% {
+                transform: translateX(-18px) translateY(0) scale(0.96);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            50% {
+                transform: translateX(120px) translateY(-6px) scale(1);
+            }
+
+            100% {
+                transform: translateX(265px) translateY(0) scale(0.97);
+                opacity: 0;
+            }
+        }
+
+        @keyframes package-run-top {
+            0% {
+                transform: translateX(-30px) translateY(0) scale(0.94);
+                opacity: 0;
+            }
+
+            12% {
+                opacity: 1;
+            }
+
+            55% {
+                transform: translateX(110px) translateY(6px) scale(1);
+            }
+
+            100% {
+                transform: translateX(220px) translateY(0) scale(0.96);
+                opacity: 0;
+            }
+        }
+
+
+        .shell {
+            position: relative;
+            z-index: 1;
+            max-width: 1760px;
+            margin: 0 auto;
+            border-radius: 32px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: linear-gradient(180deg, rgba(6, 8, 12, 0.92), rgba(11, 14, 20, 0.98));
+            box-shadow: var(--shadow);
+        }
+
+        .shell::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(9, 12, 18, 0.78), rgba(9, 12, 18, 0.9)),
+                radial-gradient(circle at 18% 30%, rgba(255, 147, 48, 0.12), transparent 30%),
+                radial-gradient(circle at 82% 78%, rgba(87, 179, 255, 0.1), transparent 28%),
+                url("image/photo_39_2025-11-08_08-56-29.jpg") center/cover no-repeat;
+            opacity: 0.38;
+            filter: blur(2px) saturate(0.8);
+            transform: scale(1.02);
+            pointer-events: none;
+        }
+
+        .shell>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 290px 1fr;
+            min-height: calc(100vh - 48px);
+        }
+
+        .sidebar {
+            padding: 24px 18px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+                linear-gradient(180deg, rgba(255, 147, 48, 0.05), transparent 35%);
+            border-right: 1px solid var(--line);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(111, 66, 193, 0.22), rgba(111, 66, 193, 0.07));
+            border: 1px solid rgba(176, 132, 255, 0.28);
+        }
+
+        .brand-logo {
+            width: 62px;
+            height: 62px;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #8f59ff, #5b2db5);
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 2rem;
+            animation: pulse 4.4s infinite ease-in-out;
+            box-shadow: 0 16px 28px rgba(91, 45, 181, 0.28);
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 1.1rem;
+            line-height: 1.2;
+        }
+
+        .brand p {
+            margin: 4px 0 0;
+            color: #d6c9ff;
+            font-size: 0.84rem;
+        }
+
+        .side-card,
+        .nav-card {
+            border-radius: 22px;
+            background: var(--panel-3);
+            border: 1px solid var(--line);
+        }
+
+        .side-card {
+            padding: 18px;
+        }
+
+        .warehouse-badge {
+            width: 78px;
+            height: 78px;
+            margin-bottom: 16px;
+            border-radius: 24px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, rgba(255, 147, 48, 0.26), rgba(87, 179, 255, 0.12));
+            color: #fff;
+            font-size: 2rem;
+            animation: float-soft 4.8s ease-in-out infinite;
+        }
+
+        .side-card h2,
+        .nav-card h2 {
+            margin: 0 0 8px;
+            font-size: 1rem;
+        }
+
+        .caption {
+            color: var(--muted);
+            font-size: 0.86rem;
+            line-height: 1.45;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #ffdcb4;
+            background: rgba(255, 147, 48, 0.12);
+            border: 1px solid rgba(255, 147, 48, 0.14);
+        }
+
+        .nav-card {
+            padding: 18px 0 10px;
+        }
+
+        .nav-title {
+            padding: 0 18px 12px;
+            color: var(--muted);
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-list li {
+            padding: 0;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            color: #d3dcec;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.is-active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.03);
+            border-left-color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            box-shadow: 0 0 12px rgba(255, 147, 48, 0.4);
+        }
+
+        .side-stats {
+            display: grid;
+            gap: 12px;
+        }
+
+        .side-stat {
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .side-stat strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .main {
+            padding: 20px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.01));
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 18px;
+            padding: 4px 6px 12px;
+        }
+
+        .crumbs {
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search {
+            min-width: 280px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--line);
+            color: var(--muted);
+        }
+
+        .status-chip {
+            padding: 11px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--line);
+            font-size: 0.9rem;
+            color: #e8eefb;
+        }
+
+        .toolbar-note {
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .month-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 0 6px 18px;
+        }
+
+        .month-btn {
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            background: rgba(255, 255, 255, 0.03);
+            color: #d7e0ef;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+        }
+
+        .month-btn:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 147, 48, 0.28);
+        }
+
+        .month-btn.active {
+            background: linear-gradient(180deg, rgba(255, 147, 48, 0.16), rgba(255, 255, 255, 0.03));
+            border-color: rgba(255, 147, 48, 0.42);
+            color: #fff4e7;
+            box-shadow: 0 12px 24px rgba(255, 147, 48, 0.12);
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(330px, 0.85fr);
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .panel {
+            position: relative;
+            border-radius: var(--radius);
+            background: linear-gradient(180deg, var(--panel-2), var(--panel));
+            border: 1px solid var(--line);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .panel::after {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: conic-gradient(from 0deg, transparent 0deg, rgba(87, 179, 255, 0.06) 70deg, rgba(255, 147, 48, 0.45) 120deg, rgba(66, 215, 198, 0.18) 190deg, transparent 260deg, rgba(255, 147, 48, 0.35) 320deg, transparent 360deg);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.9;
+            pointer-events: none;
+            animation: border-spin 8s linear infinite;
+        }
+
+        .panel>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-panel {
+            position: relative;
+            overflow: hidden;
+            padding: 28px;
+        }
+
+        .hero-panel::before {
+            content: "";
+            position: absolute;
+            inset: -20%;
+            background:
+                radial-gradient(circle at 15% 15%, rgba(255, 147, 48, 0.16), transparent 22%),
+                radial-gradient(circle at 85% 12%, rgba(87, 179, 255, 0.12), transparent 20%);
+            pointer-events: none;
+        }
+
+        .hero-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) 300px;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .hero-grid-visual {
+            display: block;
+        }
+
+        .warehouse-stage {
+            position: relative;
+            min-height: 300px;
+            border-radius: 26px;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(255, 170, 64, 0.14), transparent 24%),
+                radial-gradient(circle at 82% 16%, rgba(87, 179, 255, 0.14), transparent 24%),
+                linear-gradient(180deg, rgba(18, 24, 35, 0.94), rgba(8, 12, 18, 0.98));
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .warehouse-stage::before {
+            content: "";
+            position: absolute;
+            inset: auto 0 28px 0;
+            height: 86px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 26%),
+                repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 46px, rgba(255, 255, 255, 0.02) 46px 92px),
+                linear-gradient(180deg, #111722, #090d13);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .warehouse-stage::after {
+            content: "";
+            position: absolute;
+            left: 26px;
+            right: 26px;
+            bottom: 64px;
+            height: 8px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+        }
+
+        .rack-tower {
+            position: absolute;
+            top: 34px;
+            width: 70px;
+            height: 188px;
+            border-radius: 14px;
+            border: 2px solid rgba(120, 140, 166, 0.34);
+            background: linear-gradient(180deg, rgba(45, 56, 72, 0.44), rgba(15, 20, 28, 0.44));
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+        }
+
+        .rack-tower.left {
+            left: 24px;
+        }
+
+        .rack-tower.right {
+            right: 26px;
+        }
+
+        .rack-tower::before,
+        .rack-tower::after {
+            content: "";
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            height: 16px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, rgba(255, 147, 48, 0.58), rgba(255, 211, 106, 0.24));
+        }
+
+        .rack-tower::before {
+            top: 30px;
+        }
+
+        .rack-tower::after {
+            top: 94px;
+        }
+
+        .rack-beam {
+            position: absolute;
+            left: 6px;
+            right: 6px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .rack-beam.b1 {
+            top: 58px;
+        }
+
+        .rack-beam.b2 {
+            top: 124px;
+        }
+
+        .rack-beam.b3 {
+            bottom: 38px;
+        }
+
+        .rack-pallet {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            height: 18px;
+            border-radius: 5px;
+            background: linear-gradient(135deg, #c88a42, #9f6627);
+            opacity: 0.9;
+        }
+
+        .rack-pallet.p1 {
+            top: 31px;
+        }
+
+        .rack-pallet.p2 {
+            top: 95px;
+        }
+
+        .rack-pallet.p3 {
+            bottom: 19px;
+        }
+
+        .reachtruck {
+            position: absolute;
+            left: -54px;
+            bottom: 36px;
+            width: 248px;
+            height: 196px;
+            animation: truck-rock 2.8s ease-in-out infinite, reach-drive 9s linear infinite;
+        }
+
+        .reachtruck .mast {
+            position: absolute;
+            left: 22px;
+            bottom: 30px;
+            width: 28px;
+            height: 138px;
+            border-radius: 8px;
+            background: linear-gradient(180deg, #454f5f, #161c25);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+        }
+
+        .reachtruck .mast::before,
+        .reachtruck .mast::after {
+            content: "";
+            position: absolute;
+            top: 8px;
+            bottom: 8px;
+            width: 4px;
+            border-radius: 999px;
+            background: rgba(154, 169, 191, 0.34);
+        }
+
+        .reachtruck .mast::before {
+            left: 6px;
+        }
+
+        .reachtruck .mast::after {
+            right: 6px;
+        }
+
+        .reachtruck .carriage {
+            position: absolute;
+            left: 8px;
+            bottom: 52px;
+            width: 48px;
+            height: 34px;
+            border-radius: 10px;
+            background: linear-gradient(180deg, #5a6779, #283140);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: mast-lift 5s ease-in-out infinite;
+        }
+
+        .reachtruck .fork {
+            position: absolute;
+            left: -52px;
+            top: 15px;
+            width: 56px;
+            height: 6px;
+            background: linear-gradient(90deg, #8a99af, #5c697b);
+            border-radius: 3px;
+            animation: fork-lift 5s ease-in-out infinite;
+        }
+
+        .reachtruck .fork::before,
+        .reachtruck .fork::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            width: 46px;
+            height: 6px;
+            background: linear-gradient(90deg, #8a99af, #5c697b);
+            border-radius: 3px;
+        }
+
+        .reachtruck .fork::before {
+            top: 18px;
+        }
+
+        .reachtruck .fork::after {
+            display: none;
+        }
+
+        .reachtruck .lift-cargo {
+            position: absolute;
+            left: -18px;
+            bottom: 86px;
+            width: 40px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f0b267, #c97e2c);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+            animation: mast-lift 5s ease-in-out infinite, cargo-glow 3s ease-in-out infinite;
+        }
+
+        .reachtruck .lift-cargo::before,
+        .reachtruck .lift-cargo::after {
+            content: "";
+            position: absolute;
+            background: rgba(114, 68, 22, 0.45);
+        }
+
+        .reachtruck .lift-cargo::before {
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            transform: translateX(-50%);
+        }
+
+        .reachtruck .lift-cargo::after {
+            left: 6px;
+            right: 6px;
+            top: 11px;
+            height: 2px;
+        }
+
+        .reachtruck .body {
+            position: absolute;
+            left: 56px;
+            bottom: 18px;
+            width: 150px;
+            height: 86px;
+            border-radius: 26px 18px 18px 20px;
+            background: linear-gradient(135deg, #ff633f 0 58%, #303845 58% 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 18px 28px rgba(0, 0, 0, 0.28);
+        }
+
+        .reachtruck .body::before {
+            content: "";
+            position: absolute;
+            left: 32px;
+            top: -34px;
+            width: 84px;
+            height: 54px;
+            border-radius: 18px 18px 8px 8px;
+            background: linear-gradient(180deg, rgba(31, 38, 49, 0.98), rgba(20, 26, 35, 0.98));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .reachtruck .body::after {
+            content: "35";
+            position: absolute;
+            left: 92px;
+            bottom: 18px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            color: #fff4ef;
+        }
+
+        .reachtruck .cabin {
+            position: absolute;
+            left: 88px;
+            bottom: 80px;
+            width: 92px;
+            height: 98px;
+            border-radius: 12px 12px 8px 8px;
+            border: 5px solid #66727d;
+            border-bottom: none;
+            border-left-width: 6px;
+            border-right-width: 6px;
+        }
+
+        .reachtruck .cabin::before {
+            content: "";
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            width: 20px;
+            height: 36px;
+            border-radius: 8px 8px 4px 4px;
+            background: rgba(21, 27, 36, 0.96);
+            box-shadow: 28px 6px 0 0 rgba(21, 27, 36, 0.96);
+        }
+
+        .reachtruck .cabin::after {
+            content: "";
+            position: absolute;
+            left: -8px;
+            right: -8px;
+            top: -10px;
+            height: 10px;
+            border-radius: 10px;
+            background: linear-gradient(180deg, #7a858f, #58626d);
+        }
+
+        .reachtruck .wheel {
+            position: absolute;
+            bottom: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 50%, #303744 0 24%, #11161f 24% 100%);
+            border: 5px solid #1b2028;
+            animation: wheel-spin 1.2s linear infinite;
+            box-shadow: inset 0 0 0 4px #727d88;
+        }
+
+        .reachtruck .wheel.left {
+            left: 28px;
+            width: 52px;
+            height: 52px;
+        }
+
+        .reachtruck .wheel.right {
+            left: 160px;
+            width: 62px;
+            height: 62px;
+        }
+
+        .signal-dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 14px rgba(55, 216, 157, 0.6);
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        .signal-dot.d1 {
+            right: 42px;
+            top: 38px;
+        }
+
+        .signal-dot.d2 {
+            left: 212px;
+            top: 168px;
+            animation-delay: 0.8s;
+        }
+
+        .profile-panel {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .profile-top {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .avatar-shell {
+            position: relative;
+            width: 118px;
+            height: 118px;
+            flex: 0 0 auto;
+            border-radius: 32px;
+            padding: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .avatar-shell::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent 0%, rgba(255, 147, 48, 0.1) 40%, var(--accent) 60%, rgba(66, 215, 198, 0.8) 80%, transparent 100%);
+            animation: border-spin 3s linear infinite;
+            z-index: -1;
+        }
+
+        .avatar-shell img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 28px;
+            object-fit: cover;
+            background: #121927;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-panel h3 {
+            margin: 0;
+            font-size: 1.45rem;
+        }
+
+        .profile-age {
+            margin: 6px 0 0;
+            color: #dfe8f7;
+            font-size: 0.98rem;
+            font-weight: 700;
+        }
+
+        .profile-panel p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .shift-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 9px 16px;
+            border-radius: 999px;
+            background: rgba(255, 147, 48, 0.11);
+            border: 1px solid rgba(255, 147, 48, 0.14);
+            color: #ffdcb4;
+            font-size: 0.95rem;
+            font-weight: 800;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .mini-kpi {
+            padding: 14px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .mini-kpi:hover {
+            transform: translateY(-4px) scale(1.02);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 147, 48, 0.3);
+            z-index: 2;
+        }
+
+        .mini-kpi span {
+            display: block;
+            color: var(--muted);
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+
+        .mini-kpi strong {
+            font-size: 1.1rem;
+            display: inline-block;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease, text-shadow 0.3s ease;
+            transform-origin: left center;
+        }
+
+        .mini-kpi:hover strong {
+            transform: scale(1.1);
+            color: var(--accent-2);
+            text-shadow: 0 0 10px rgba(255, 177, 79, 0.4);
+        }
+
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .kpi-card {
+            padding: 20px;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 147, 48, 0.15);
+            z-index: 10;
+        }
+
+        .kpi-card .label {
+            color: var(--muted);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            margin-bottom: 14px;
+        }
+
+        .kpi-value {
+            font-size: clamp(1.9rem, 2.4vw, 2.4rem);
+            font-weight: 800;
+            margin-bottom: 12px;
+            display: inline-block;
+            transform-origin: left center;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        .kpi-card:hover .kpi-value {
+            transform: scale(1.15);
+            color: var(--accent-2);
+            text-shadow: 0 0 15px rgba(255, 177, 79, 0.4);
+        }
+
+        .pie-kpi-card {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .pie-kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .pie-chart {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: conic-gradient(#333 0 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.4s ease;
+            flex-shrink: 0;
+            margin-right: -4px;
+        }
+
+        .kpi-card:hover .pie-chart {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .pie-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .pie-legend-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #dbe6f7;
+            padding-bottom: 2px;
+            border-bottom: 1px dotted rgba(255, 255, 255, 0.05);
+        }
+
+        .pie-legend-item:last-child {
+            border-bottom: none;
+        }
+
+        .pie-legend-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pie-legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .pie-legend-val {
+            font-weight: 700;
+        }
+
+        .kpi-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            color: #dae2f1;
+            font-size: 0.92rem;
+        }
+
+        .trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .trend.up {
+            color: #8ef0c8;
+            background: rgba(55, 216, 157, 0.12);
+        }
+
+        .trend.down {
+            color: #ffb6b6;
+            background: rgba(255, 109, 109, 0.12);
+        }
+
+        .spectrum-card .kpi-value {
+            margin-bottom: 10px;
+        }
+
+        .spectrum-wrap {
+            margin-bottom: 14px;
+        }
+
+        .spectrum-bar {
+            position: relative;
+            height: 14px;
+            border-radius: 999px;
+            overflow: visible;
+            background: linear-gradient(90deg, #ff5d5d 0%, #ffb347 30%, #ffd76a 52%, #42d7c6 76%, #57b3ff 100%);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 8px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .spectrum-bar span {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #f7fbff;
+            border: 3px solid rgba(12, 18, 28, 0.92);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12), 0 8px 18px rgba(0, 0, 0, 0.35);
+            transform: translate(-50%, -50%);
+            transition: left 0.45s ease;
+        }
+
+        .spectrum-scale {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 0.74rem;
+            letter-spacing: 0.08em;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.95fr 0.95fr;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .section-card {
+            padding: 22px;
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .section-head h3 {
+            margin: 0;
+            font-size: 1.05rem;
+        }
+
+        .subtext {
+            color: var(--muted);
+            font-size: 0.86rem;
+        }
+
+        .shift-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .shift-btn {
+            position: relative;
+            width: 100%;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 22px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.015));
+            color: var(--text);
+            text-align: left;
+            cursor: pointer;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+
+        .shift-btn:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 147, 48, 0.28);
+        }
+
+        .shift-btn.active {
+            background: linear-gradient(180deg, rgba(255, 147, 48, 0.14), rgba(255, 255, 255, 0.025));
+            border-color: rgba(255, 147, 48, 0.4);
+            box-shadow: 0 18px 32px var(--shift-glow);
+        }
+
+        .shift-btn small {
+            display: block;
+            color: var(--muted);
+            margin-bottom: 8px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .shift-btn strong {
+            display: block;
+            font-size: 1.02rem;
+            margin-bottom: 6px;
+        }
+
+        .shift-btn span {
+            color: #d3dceb;
+            font-size: 0.9rem;
+        }
+
+        .line-chart {
+            position: relative;
+            height: 260px;
+            border-radius: 20px;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(255, 170, 64, 0.12), transparent 24%),
+                radial-gradient(circle at 82% 12%, rgba(87, 179, 255, 0.12), transparent 24%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .line-chart::before {
+            content: "";
+            position: absolute;
+            inset: auto 0 0 0;
+            height: 72px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 18%),
+                repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 42px, rgba(255, 255, 255, 0.015) 42px 84px),
+                linear-gradient(180deg, #111722, #090d13);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .line-chart::after {
+            content: "";
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            bottom: 54px;
+            height: 6px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+        }
+
+
+        .hero-line-chart {
+            height: 300px;
+        }
+
+        .hero-monitor-label {
+            margin-top: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #eef4ff;
+            font-size: 1.18rem;
+            font-weight: 900;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            text-align: center;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 12px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .iso-map-container {
+            perspective: 1200px;
+            width: 100%;
+            height: 100%;
+            min-height: 280px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: radial-gradient(circle at center, rgba(87, 179, 255, 0.08) 0%, transparent 70%);
+        }
+
+        .iso-map {
+            width: 320px;
+            height: 320px;
+            transform-style: preserve-3d;
+            transform: rotateX(55deg) rotateZ(-45deg);
+            position: relative;
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.04) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.04) 2px, transparent 2px),
+                rgba(12, 17, 26, 0.6);
+            background-size: 32px 32px;
+            border: 2px solid rgba(87, 179, 255, 0.15);
+            box-shadow: 0 0 40px rgba(87, 179, 255, 0.05), inset 0 0 30px rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            animation: iso-map-float 8s ease-in-out infinite;
+        }
+
+        @keyframes iso-map-float {
+
+            0%,
+            100% {
+                transform: rotateX(55deg) rotateZ(-45deg) translateZ(0);
+            }
+
+            50% {
+                transform: rotateX(55deg) rotateZ(-45deg) translateZ(10px);
+            }
+        }
+
+        .iso-rack {
+            position: absolute;
+            transform-style: preserve-3d;
+            width: 32px;
+            height: 128px;
+            transform: translateZ(0);
+        }
+
+        .iso-rack-surface {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(45, 56, 72, 0.95), rgba(20, 26, 36, 0.95));
+            border: 1px solid rgba(87, 179, 255, 0.3);
+        }
+
+        .iso-rack .top {
+            width: 32px;
+            height: 128px;
+            transform: translateZ(48px);
+            background: linear-gradient(135deg, rgba(121, 142, 173, 0.4), rgba(45, 56, 72, 0.9));
+        }
+
+        .iso-rack .front {
+            width: 32px;
+            height: 48px;
+            transform: rotateX(-90deg) translateZ(128px);
+            transform-origin: bottom;
+            background: linear-gradient(180deg, rgba(58, 71, 92, 0.9), rgba(22, 29, 41, 0.9));
+        }
+
+        .iso-rack .side {
+            width: 48px;
+            height: 128px;
+            transform: rotateY(90deg) translateZ(32px);
+            transform-origin: left;
+            background: linear-gradient(90deg, rgba(34, 42, 56, 0.9), rgba(20, 26, 36, 0.9));
+        }
+
+        .r1 {
+            left: 48px;
+            top: 48px;
+        }
+
+        .r2 {
+            left: 144px;
+            top: 48px;
+        }
+
+        .r3 {
+            left: 240px;
+            top: 80px;
+            height: 96px;
+        }
+
+        .r3 .top {
+            height: 96px;
+        }
+
+        .r3 .front {
+            transform: rotateX(-90deg) translateZ(96px);
+        }
+
+        .r3 .side {
+            height: 96px;
+        }
+
+        .iso-glow {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            background: radial-gradient(circle, rgba(255, 147, 48, 0.5) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translateZ(1px);
+            animation: iso-glow-pulse 2s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes iso-glow-pulse {
+
+            0%,
+            100% {
+                transform: translateZ(1px) scale(0.8);
+                opacity: 0.4;
+            }
+
+            50% {
+                transform: translateZ(1px) scale(1.3);
+                opacity: 0.9;
+            }
+        }
+
+        .g1 {
+            left: 96px;
+            top: -16px;
+        }
+
+        .g2 {
+            left: 192px;
+            top: 180px;
+            animation-delay: 1s;
+        }
+
+        .g3 {
+            left: 0px;
+            top: 160px;
+            background: radial-gradient(circle, rgba(66, 215, 198, 0.5) 0%, transparent 70%);
+            animation-delay: 0.5s;
+        }
+
+        .iso-bot {
+            position: absolute;
+            width: 16px;
+            height: 24px;
+            background: #ff9330;
+            box-shadow: 0 0 16px #ff9330;
+            transform-style: preserve-3d;
+            border-radius: 4px;
+            animation: iso-bot-move 12s infinite linear;
+        }
+
+        .iso-bot::before {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+            left: 5px;
+            top: 4px;
+            box-shadow: 0 0 8px #fff;
+        }
+
+        @keyframes iso-bot-move {
+            0% {
+                left: 104px;
+                top: 16px;
+                transform: translateZ(6px) rotateZ(0deg);
+            }
+
+            15% {
+                left: 104px;
+                top: 220px;
+                transform: translateZ(6px) rotateZ(0deg);
+            }
+
+            20% {
+                left: 104px;
+                top: 220px;
+                transform: translateZ(6px) rotateZ(90deg);
+            }
+
+            35% {
+                left: 200px;
+                top: 220px;
+                transform: translateZ(6px) rotateZ(90deg);
+            }
+
+            40% {
+                left: 200px;
+                top: 220px;
+                transform: translateZ(6px) rotateZ(180deg);
+            }
+
+            55% {
+                left: 200px;
+                top: 48px;
+                transform: translateZ(6px) rotateZ(180deg);
+            }
+
+            60% {
+                left: 200px;
+                top: 48px;
+                transform: translateZ(6px) rotateZ(-90deg);
+            }
+
+            80% {
+                left: 104px;
+                top: 48px;
+                transform: translateZ(6px) rotateZ(-90deg);
+            }
+
+            85% {
+                left: 104px;
+                top: 48px;
+                transform: translateZ(6px) rotateZ(0deg);
+            }
+
+            95% {
+                left: 104px;
+                top: 16px;
+                transform: translateZ(6px) rotateZ(0deg);
+            }
+
+            100% {
+                left: 104px;
+                top: 16px;
+                transform: translateZ(6px) rotateZ(0deg);
+            }
+        }
+
+        .iso-scan {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            top: 0;
+            background: linear-gradient(90deg, transparent, rgba(66, 215, 198, 0.9), transparent);
+            box-shadow: 0 0 24px rgba(66, 215, 198, 0.6);
+            transform: translateZ(1px);
+            animation: iso-scan-move 4s infinite ease-in-out;
+        }
+
+        @keyframes iso-scan-move {
+            0% {
+                top: 0;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                top: 320px;
+                opacity: 0;
+            }
+        }
+
+        .chart-days {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            margin-top: 12px;
+            color: var(--muted);
+            font-size: 0.82rem;
+            text-align: center;
+        }
+
+        .metric-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .metric-item strong {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        .bar {
+            height: 10px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .bar>span {
+            display: block;
+            height: 100%;
+            width: 0;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            transition: width 0.5s ease;
+        }
+
+        .zone-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .zone-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 14px;
+            align-items: center;
+            padding: 14px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .zone-mark {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, rgba(255, 147, 48, 0.2), rgba(66, 215, 198, 0.1));
+            font-weight: 800;
+        }
+
+        .zone-line {
+            height: 8px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .zone-line span {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #42d7c6, #57b3ff);
+        }
+
+        .wide-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 0.95fr;
+            gap: 18px;
+        }
+
+        .compare-section {
+            margin-bottom: 18px;
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .compare-card {
+            padding: 20px;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+        }
+
+        .compare-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 147, 48, 0.15);
+            z-index: 10;
+        }
+
+        .compare-card h4 {
+            margin: 0 0 8px;
+            font-size: 1rem;
+        }
+
+        .compare-note {
+            color: var(--muted);
+            font-size: 0.82rem;
+            margin-bottom: 16px;
+        }
+
+        .compare-stack {
+            display: grid;
+            gap: 12px;
+        }
+
+        .compare-row {
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .compare-row:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 147, 48, 0.4);
+            z-index: 2;
+        }
+
+        .compare-row.active {
+            border-color: rgba(255, 147, 48, 0.32);
+            box-shadow: 0 12px 28px rgba(255, 147, 48, 0.1);
+        }
+
+        .compare-row.is-leader {
+            background: linear-gradient(180deg, rgba(66, 215, 198, 0.08), rgba(255, 255, 255, 0.025));
+        }
+
+        .compare-topline {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .compare-topline strong {
+            font-size: 0.95rem;
+            display: inline-block;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease, text-shadow 0.3s ease;
+            transform-origin: right center;
+        }
+
+        .compare-row:hover .compare-topline strong {
+            transform: scale(1.4);
+            color: var(--accent-2);
+            text-shadow: 0 0 10px rgba(255, 177, 79, 0.4);
+        }
+
+        .compare-line {
+            height: 9px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .compare-line span {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            min-width: 8%;
+            transition: width 0.45s ease;
+        }
+
+        .compare-summary {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 14px;
+            color: #dbe6f7;
+            font-size: 0.84rem;
+        }
+
+        .compare-wave {
+            margin-top: 8px;
+            margin-bottom: 10px;
+            padding: 12px 12px 8px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .compare-wave svg {
+            display: block;
+            width: 100%;
+            height: 170px;
+        }
+
+        .compare-wave-grid line {
+            stroke: rgba(255, 255, 255, 0.08);
+            stroke-width: 1;
+        }
+
+        .wave-data-point {
+            cursor: pointer;
+            isolation: isolate;
+        }
+
+        .wave-data-point circle {
+            transition: r 0.2s, stroke 0.2s;
+        }
+
+        .wave-data-point text {
+            opacity: 0;
+            transform: translateY(5px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .wave-data-point:hover circle {
+            r: 9;
+            stroke: var(--accent);
+        }
+
+        .wave-data-point:hover text {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .compare-wave-axis {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 0.74rem;
+            text-align: center;
+            letter-spacing: 0.04em;
+        }
+
+        .compare-wave-axis span.active {
+            color: #fff2d9;
+            font-weight: 700;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            color: var(--muted);
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 700;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .badge.green {
+            color: #8ef0c8;
+            background: rgba(55, 216, 157, 0.12);
+        }
+
+        .badge.yellow {
+            color: #ffe19c;
+            background: rgba(255, 211, 106, 0.12);
+        }
+
+        .badge.red {
+            color: #ffbbbb;
+            background: rgba(255, 109, 109, 0.12);
+        }
+
+        .badge.blue {
+            color: #b8dcff;
+            background: rgba(87, 179, 255, 0.12);
+        }
+
+        .footer-note {
+            margin-top: 18px;
+            color: var(--muted);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1320px) {
+
+            .hero,
+            .section-grid,
+            .wide-grid,
+            .kpi-grid,
+            .compare-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .hero-panel,
+            .profile-panel,
+            .section-card,
+            .kpi-card {
+                min-width: 0;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 1120px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                border-right: 0;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .shift-buttons,
+            .section-grid,
+            .wide-grid,
+            .kpi-grid,
+            .compare-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 780px) {
+            body {
+                padding: 12px;
+            }
+
+            .shell {
+                border-radius: 22px;
+            }
+
+            .main,
+            .sidebar {
+                padding: 14px;
+            }
+
+            .topbar,
+            .toolbar,
+            .profile-top {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toolbar-actions {
+                justify-content: stretch;
+            }
+
+            .search {
+                min-width: 0;
+            }
+
+            .profile-grid,
+            .compare-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="shell">
+        <div class="layout">
+            <aside class="sidebar">
+                <div class="brand">
+                    <div class="brand-logo">U</div>
+                    <div>
+                        <h1>Uzum Market</h1>
+                        <p>Warehouse Shift Dashboard</p>
+                    </div>
+                </div>
+
+                <div class="side-card">
+                    <div class="warehouse-badge">▣</div>
+                    <h2>Главный склад</h2>
+                    <p class="caption">Дашборд показывает сменных начальников, ошибки , размещение товара, OPS и уровень
+                        правильного использования системы.</p>
+                    <div class="pill">● 4 активные смены</div>
+                </div>
+
+                <div class="nav-card">
+                    <div class="nav-title">Разделы</div>
+                    <ul class="nav-list">
+                        <li><a class="nav-link is-active" href="#dashboard"><span class="dot"></span>Главная панель</a>
+                        </li>
+                        <li><a class="nav-link" href="#managers"><span class="dot"></span>Начальники смен</a></li>
+                        <li><a class="nav-link" href="#metrics"><span class="dot"></span><span
+                                    id="metricsNavLabel">Показатели марта</span></a></li>
+                    </ul>
+                </div>
+
+                <div class="side-card">
+                    <h2>Оперативная сводка</h2>
+                    <div class="side-stats">
+                        <div class="side-stat">
+                            <strong>128</strong>
+                            <span class="caption">Сотрудников в 4 сменах</span>
+                        </div>
+                        <div class="side-stat">
+                            <strong>18 640</strong>
+                            <span class="caption" id="sidePlacedCaption">Размещений товара за март</span>
+                        </div>
+                        <div class="side-stat">
+                            <strong>93%</strong>
+                            <span class="caption">Среднее использование БОТ</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="main" id="dashboard">
+                <div class="topbar">
+                    <div class="crumbs">Панель / Склад / Мониторинг / <strong style="color:#fff;">Старший смены</strong>
+                    </div>
+                    <div class="toolbar">
+                        <div class="toolbar-actions">
+                            <div class="status-chip" id="currentDateTime">Сегодня: 5 апреля 2026</div>
+                            <div class="toolbar-note" id="sheetStatus">Подключение к Google Sheets...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="month-toolbar" id="monthFilter">
+                    <button class="month-btn active" data-month="Март">Март</button>
+                    <button class="month-btn" data-month="Апрель">Апрель</button>
+                    <button class="month-btn" data-month="Май">Май</button>
+                    <button class="month-btn" data-month="Июнь">Июнь</button>
+                    <button class="month-btn" data-month="Июль">Июль</button>
+                    <button class="month-btn" data-month="Август">Август</button>
+                    <button class="month-btn" data-month="Сентябрь">Сентябрь</button>
+                    <button class="month-btn" data-month="Октябрь">Октябрь</button>
+                    <button class="month-btn" data-month="Ноябрь">Ноябрь</button>
+                    <button class="month-btn" data-month="Декабрь">Декабрь</button>
+                </section>
+
+                <section class="hero">
+                    <aside class="panel profile-panel">
+                        <div class="profile-top">
+                            <div class="avatar-shell">
+                                <img id="avatar" alt="Профиль начальника смены">
+                            </div>
+                            <div>
+                                <div class="shift-label" id="shiftLabel">1 смена</div>
+                                <h3 id="profileName">Karimov Ilhom</h3>
+                                <p class="profile-age" id="profileAge">28лет</p>
+                                <p id="profileRole">Старший смены отдела товародвижения по выходящему потоку.</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-grid">
+                            <div class="mini-kpi">
+                                <span>Сотрудников в смене</span>
+                                <strong id="miniEmployees">32 человека</strong>
+                            </div>
+                            <div class="mini-kpi">
+                                <span>OPS</span>
+                                <strong id="miniOps">94.8</strong>
+                            </div>
+                            <div class="mini-kpi">
+                                <span>Пересчет менеджер</span>
+                                <strong id="miniRecountManager">IRMATOV SARDOR SADRIDDIN O'G'LI</strong>
+                            </div>
+                            <div class="mini-kpi">
+                                <span>OPS пересчета</span>
+                                <strong id="miniRecountOps">200</strong>
+                            </div>
+                            <div class="mini-kpi">
+                                <span>Менеджер размещения 1</span>
+                                <strong id="miniPlacementManager1">TALIPBAYEV DAURENBEK BATIRBEK O'G'LI</strong>
+                            </div>
+                            <div class="mini-kpi">
+                                <span>OPS размещения 1</span>
+                                <strong id="miniPlacementOps1">200</strong>
+                            </div>
+                            <div class="mini-kpi">
+                                <span>Менеджер размещения 2</span>
+                                <strong id="miniPlacementManager2">TURABAYEV XUSNIDDIN NAMAZBAYEVICH</strong>
+                            </div>
+                            <div class="mini-kpi">
+                                <span>OPS размещения 2</span>
+                                <strong id="miniPlacementOps2">200</strong>
+                            </div>
+                        </div>
+                    </aside>
+
+
+                    <div class="panel hero-panel">
+                        <div class="hero-grid hero-grid-visual">
+                            <div>
+                                <div class="line-chart hero-line-chart">
+                                    <div class="iso-map-container" id="heroPulseContainer" style="inset: 0 10px;">
+                                    </div>
+                                </div>
+                                <div class="hero-monitor-label">Мониторинг Отдел товародвижения Входящий поток</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <section id="managers">
+                    <div class="shift-buttons">
+                        <button class="shift-btn active" data-shift="shift1">
+                            <small>1 смена</small>
+                            <strong>Karimov Ilhom</strong>
+                        </button>
+                        <button class="shift-btn" data-shift="shift2">
+                            <small>2 смена</small>
+                            <strong>Kadirov Ramil</strong>
+                        </button>
+                        <button class="shift-btn" data-shift="shift3">
+                            <small>3 смена</small>
+                            <strong>Sidikov Nizomiddin</strong>
+                        </button>
+                        <button class="shift-btn" data-shift="shift4">
+                            <small>4 смена</small>
+                            <strong>Saidkarimov Dovud</strong>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="kpi-grid" id="metrics">
+                    <article class="panel kpi-card">
+                        <div class="label" id="errorsCardLabel">Ошибки за март</div>
+                        <div class="kpi-value" id="errorsValue">12</div>
+                        <div class="kpi-meta">
+                            <span>Количество зарегистрированных ошибок</span>
+                            <span class="trend down" id="errorsTrend">▲ выше плана</span>
+                        </div>
+                    </article>
+
+                    <article class="panel kpi-card">
+                        <div class="label">Размещено товара</div>
+                        <div class="kpi-value" id="placedValue">4 860</div>
+                        <div class="kpi-meta">
+                            <span id="placedCardCaption">Единиц товара размещено за март</span>
+                            <span class="trend up" id="placedTrend">▲ высокий темп</span>
+                        </div>
+                    </article>
+
+                    <article class="panel kpi-card">
+                        <div class="label">OPS</div>
+                        <div class="kpi-value" id="opsValue">94.8</div>
+                        <div class="kpi-meta">
+                            <span>Операционный показатель смены</span>
+                            <span class="trend up" id="opsTrend">▲ сильный результат</span>
+                        </div>
+                    </article>
+
+                    <article class="panel kpi-card">
+                        <div class="label">Акт закрыт с нулевым</div>
+                        <div class="kpi-value" id="usageValue">45</div>
+                        <div class="kpi-meta">
+                            <span>Количество актов по текущей смене</span>
+                            <span class="trend up" id="usageTrend">▲ под контролем</span>
+                        </div>
+                    </article>
+
+                    <article class="panel kpi-card">
+                        <div class="label">Ошибки Пересчет</div>
+                        <div class="kpi-value" id="recountErrorsValue">28</div>
+                        <div class="kpi-meta">
+                            <span>Ошибки по пересчету за месяц</span>
+                            <span class="trend down" id="recountErrorsTrend">▲ выше плана</span>
+                        </div>
+                    </article>
+
+                    <article class="panel kpi-card">
+                        <div class="label">Ошибки размещения</div>
+                        <div class="kpi-value" id="placementErrorsValue">15</div>
+                        <div class="kpi-meta">
+                            <span>Ошибки по размещению за месяц</span>
+                            <span class="trend down" id="placementErrorsTrend">▲ выше плана</span>
+                        </div>
+                    </article>
+
+                    <article class="panel kpi-card spectrum-card">
+                        <div class="label">Статистика использования бота</div>
+                        <div class="kpi-value" id="botUsageStatsValue">50%</div>
+                        <div class="spectrum-wrap">
+                            <div class="spectrum-bar">
+                                <span id="botUsageStatsSpectrum"></span>
+                            </div>
+                            <div class="spectrum-scale">
+                                <span>0%</span>
+                                <span>50%</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-meta">
+                            <span>Уровень использования бота за месяц</span>
+                            <span class="trend up" id="botUsageStatsTrend">▲ стабильный уровень</span>
+                        </div>
+                    </article>
+
+                    <article class="panel kpi-card">
+                        <div class="label">Размещены неправильные категории</div>
+                        <div class="kpi-value" id="wrongCategoryPlacementValue">50%</div>
+                        <div class="kpi-meta">
+                            <span>Доля неверно размещенных категорий</span>
+                            <span class="trend down" id="wrongCategoryPlacementTrend">▲ требует контроля</span>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="compare-section">
+                    <article class="panel section-card">
+                        <div class="section-head">
+                            <div>
+                                <h3>Общая динамика по всем сменам</h3>
+                                <div class="subtext" id="compareMonthText">Сравнение 4 смен за март</div>
+                            </div>
+                            <div class="status-chip">4 смены</div>
+                        </div>
+                        <div class="compare-grid" id="comparisonGrid"></div>
+                    </article>
+                </section>
+
+                <p class="footer-note">Developer: SIROJIDDIN ANVAROV</p>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const SHEET_ID = "1GJDL9RKu8CHZDmsm9W9ahtU5P2rsQ5ngAknbkomZwkQ";
+
+        const baseShifts = {
+            shift1: {
+                shift: "1 смена",
+                name: "Karimov Ilhom",
+                age: 28,
+                avatar: "image/Ilhom.jpg",
+                role: "Старший смены Отдела Товародвижения по выходящему потоку.",
+                employees: 32,
+                errors: 12,
+                placed: 4860,
+                ops: 94.8,
+                usage: 96,
+                status: "Смена стабильна",
+                bestZone: "Зона A",
+                score: 92,
+                peak: "Пик: среда",
+                metrics: { accuracy: 97, speed: 91, scan: 96, plan: 94 },
+                trend: {
+                    errors: "▲ выше плана",
+                    errorsClass: "down",
+                    placed: "▲ высокий темп",
+                    ops: "▲ сильный результат",
+                    usage: "▲ выше нормы"
+                },
+                hero: {
+                    errors: "12 случаев",
+                    placed: "4 860 ед.",
+                    usage: "96%"
+                },
+                week: [72, 76, 88, 83, 91],
+                zones: [
+                    { name: "A", value: 94, note: "Приемка" },
+                    { name: "B", value: 78, note: "Размещение" },
+                    { name: "C", value: 69, note: "Сборка" }
+                ],
+                operations: [
+                    { id: "OP-101", title: "Приемка поставки", zone: "A-04", status: "Выполнено", badge: "green", time: "07:15" },
+                    { id: "OP-118", title: "Адресное размещение", zone: "B-12", status: "В работе", badge: "blue", time: "08:40" },
+                    { id: "OP-124", title: "Проверка ячеек", zone: "A-09", status: "Контроль", badge: "yellow", time: "09:10" }
+                ],
+                monthStatus: "Смена идет выше плана",
+                focus: "Удержать низкий уровень ошибок в зоне приемки",
+                action: "Продолжать ежедневную проверку адресного размещения",
+                recountManager: "IRMATOV SARDOR SADRIDDIN O'G'LI",
+                recountOps: 200,
+                placementManager1: "TALIPBAYEV DAURENBEK BATIRBEK O'G'LI",
+                placementOps1: 200,
+                placementManager2: "TURABAYEV XUSNIDDIN NAMAZBAYEVICH",
+                placementOps2: 200,
+                actClosedZero: 45,
+                recountErrors: 28,
+                recountErrorsData: [{ name: "Недосдача", value: 12, color: "#ff6d6d" }, { name: "Излишки", value: 10, color: "#ffd36a" }, { name: "Пересорт", value: 6, color: "#57b3ff" }],
+                placementErrors: 15,
+                placementErrorsData: [{ name: "Неверная ячейка", value: 8, color: "#ff9330" }, { name: "Ош. сканирования", value: 7, color: "#42d7c6" }],
+                botUsageStats: 68,
+                wrongCategoryPlacement: 15
+            },
+            shift2: {
+                shift: "2 смена",
+                name: "Kadirov Ramil",
+                age: 34,
+                avatar: "image/ramil.jpg",
+                role: "Старший смены Отдела Товародвижения по выходящему потоку.",
+                employees: 29,
+                errors: 18,
+                placed: 4520,
+                ops: 91.6,
+                usage: 92,
+                status: "Нагрузка повышена",
+                bestZone: "Зона B",
+                score: 88,
+                peak: "Пик: пятница",
+                metrics: { accuracy: 92, speed: 95, scan: 90, plan: 89 },
+                trend: {
+                    errors: "▲ требует внимания",
+                    errorsClass: "down",
+                    placed: "▲ стабильный поток",
+                    ops: "▲ в рабочей зоне",
+                    usage: "▲ хорошая дисциплина"
+                },
+                hero: {
+                    errors: "18 случаев",
+                    placed: "4 520 ед.",
+                    usage: "92%"
+                },
+                week: [60, 73, 75, 84, 96],
+                zones: [
+                    { name: "B", value: 91, note: "Отгрузка" },
+                    { name: "D", value: 72, note: "Буфер" },
+                    { name: "E", value: 66, note: "Подготовка" }
+                ],
+                operations: [
+                    { id: "OP-203", title: "Отгрузка рейса", zone: "B-07", status: "Выполнено", badge: "green", time: "13:20" },
+                    { id: "OP-215", title: "Сборка заказа", zone: "D-03", status: "В работе", badge: "blue", time: "14:05" },
+                    { id: "OP-221", title: "Перепроверка этикеток", zone: "E-02", status: "Риск", badge: "red", time: "15:30" }
+                ],
+                monthStatus: "Смена держит высокий темп отгрузки",
+                focus: "Снизить ошибки на перепроверке документов и этикеток",
+                action: "Добавить точечный контроль перед финальной отгрузкой",
+                recountManager: "KLYUSHIK MIXAIL ALEKSANDROVICH",
+                recountOps: 200,
+                placementManager1: "ERKABAYEV SAHOBIDDIN SIROJIDDIN O'G'LI",
+                placementOps1: 200,
+                placementManager2: "ERGASHEV IBROXIM BAXROM O'G'LI",
+                placementOps2: 200,
+                actClosedZero: 33,
+                recountErrors: 42,
+                recountErrorsData: [{ name: "Недосдача", value: 18, color: "#ff6d6d" }, { name: "Излишки", value: 15, color: "#ffd36a" }, { name: "Пересорт", value: 9, color: "#57b3ff" }],
+                placementErrors: 31,
+                placementErrorsData: [{ name: "Неверная ячейка", value: 20, color: "#ff9330" }, { name: "Ош. сканирования", value: 11, color: "#42d7c6" }],
+                botUsageStats: 54,
+                wrongCategoryPlacement: 32
+            },
+            shift3: {
+                shift: "3 смена",
+                name: "Sidikov Nizomiddin",
+                age: 33,
+                avatar: "image/Nizim.jpg",
+                role: "Старший смены Отдела Товародвижения по выходящему потоку.",
+                employees: 31,
+                errors: 14,
+                placed: 4695,
+                ops: 93.1,
+                usage: 94,
+                status: "Хороший контроль темпа",
+                bestZone: "Зона C",
+                score: 90,
+                peak: "Пик: четверг",
+                metrics: { accuracy: 95, speed: 90, scan: 94, plan: 92 },
+                trend: {
+                    errors: "▲ близко к норме",
+                    errorsClass: "down",
+                    placed: "▲ уверенный объем",
+                    ops: "▲ ровная динамика",
+                    usage: "▲ стабильное соблюдение"
+                },
+                hero: {
+                    errors: "14 случаев",
+                    placed: "4 695 ед.",
+                    usage: "94%"
+                },
+                week: [66, 71, 80, 92, 86],
+                zones: [
+                    { name: "C", value: 93, note: "Комплектация" },
+                    { name: "A", value: 75, note: "Приемка" },
+                    { name: "F", value: 71, note: "Маршруты" }
+                ],
+                operations: [
+                    { id: "OP-302", title: "Комплектация маршрута", zone: "C-11", status: "Выполнено", badge: "green", time: "19:10" },
+                    { id: "OP-314", title: "Проверка штрихкодов", zone: "F-05", status: "Контроль", badge: "yellow", time: "20:00" },
+                    { id: "OP-329", title: "Финальная сборка", zone: "C-08", status: "В работе", badge: "blue", time: "21:40" }
+                ],
+                monthStatus: "Смена показывает ровную вечернюю производительность",
+                focus: "Ускорить переход между комплектацией и маршрутизацией",
+                action: "Укрепить контроль сканирования на вечернем пике",
+                recountManager: "MAMADXO'JAYEV AXMADJON KUTBIDDIN",
+                recountOps: 300,
+                placementManager1: "ATAMATOV XUSANBOY TOLKOMBOY",
+                placementOps1: 200,
+                placementManager2: "XIKMATULLAYEV DJURABEK",
+                placementOps2: 200,
+                actClosedZero: 65,
+                recountErrors: 19,
+                recountErrorsData: [{ name: "Недосдача", value: 8, color: "#ff6d6d" }, { name: "Излишки", value: 6, color: "#ffd36a" }, { name: "Пересорт", value: 5, color: "#57b3ff" }],
+                placementErrors: 24,
+                placementErrorsData: [{ name: "Неверная ячейка", value: 15, color: "#ff9330" }, { name: "Ош. сканирования", value: 9, color: "#42d7c6" }],
+                botUsageStats: 83,
+                wrongCategoryPlacement: 11
+            },
+            shift4: {
+                shift: "4 смена",
+                name: "Saidkarimov Dovud",
+                age: 36,
+                avatar: "image/david_new.png",
+                role: "Старший смены Отдела Товародвижения по выходящему потоку.",
+                employees: 27,
+                errors: 9,
+                placed: 4565,
+                ops: 96.2,
+                usage: 98,
+                status: "Лучшая дисциплина месяца",
+                bestZone: "Зона E",
+                score: 95,
+                peak: "Пик: четверг",
+                metrics: { accuracy: 98, speed: 88, scan: 99, plan: 96 },
+                trend: {
+                    errors: "▼ ниже среднего",
+                    errorsClass: "up",
+                    placed: "▲ ровный ночной поток",
+                    ops: "▲ лучший результат",
+                    usage: "▲ образцово"
+                },
+                hero: {
+                    errors: "9 случаев",
+                    placed: "4 565 ед.",
+                    usage: "98%"
+                },
+                week: [58, 66, 74, 90, 82],
+                zones: [
+                    { name: "E", value: 96, note: "Ночная сверка" },
+                    { name: "G", value: 79, note: "Инвентаризация" },
+                    { name: "B", value: 68, note: "Подготовка к утру" }
+                ],
+                operations: [
+                    { id: "OP-401", title: "Ночная инвентаризация", zone: "G-02", status: "Выполнено", badge: "green", time: "01:10" },
+                    { id: "OP-416", title: "Подготовка утренней приемки", zone: "B-04", status: "В работе", badge: "blue", time: "03:00" },
+                    { id: "OP-423", title: "Сверка ячеек", zone: "E-01", status: "Выполнено", badge: "green", time: "04:25" }
+                ],
+                monthStatus: "Смена показывает лучший ночной контроль по WMS",
+                focus: "Сохранить высокий уровень скан-дисциплины и точности",
+                action: "Использовать ночную практику как стандарт для остальных смен",
+                recountManager: "OMAROVA RAILYA TURAXANOVNA",
+                recountOps: 200,
+                placementManager1: "KUSHTANOV RADMIR RINATOVICH",
+                placementOps1: 200,
+                placementManager2: "EMINOV MUXAMMAD KARIM RAXMONJONOVICH",
+                placementOps2: 200,
+                actClosedZero: 41,
+                recountErrors: 12,
+                recountErrorsData: [{ name: "Недосдача", value: 5, color: "#ff6d6d" }, { name: "Излишки", value: 4, color: "#ffd36a" }, { name: "Пересорт", value: 3, color: "#57b3ff" }],
+                placementErrors: 8,
+                placementErrorsData: [{ name: "Неверная ячейка", value: 5, color: "#ff9330" }, { name: "Ош. сканирования", value: 3, color: "#42d7c6" }],
+                botUsageStats: 61,
+                wrongCategoryPlacement: 25
+            }
+        };
+
+        let shifts = JSON.parse(JSON.stringify(baseShifts));
+        let sheetRows = [];
+        let activeMonth = "Март";
+        let activeShiftKey = "shift1";
+
+        const elements = {
+            avatar: document.getElementById("avatar"),
+            shiftLabel: document.getElementById("shiftLabel"),
+            profileName: document.getElementById("profileName"),
+            profileAge: document.getElementById("profileAge"),
+            profileRole: document.getElementById("profileRole"),
+            miniEmployees: document.getElementById("miniEmployees"),
+            miniOps: document.getElementById("miniOps"),
+            miniRecountManager: document.getElementById("miniRecountManager"),
+            miniRecountOps: document.getElementById("miniRecountOps"),
+            miniPlacementManager1: document.getElementById("miniPlacementManager1"),
+            miniPlacementOps1: document.getElementById("miniPlacementOps1"),
+            miniPlacementManager2: document.getElementById("miniPlacementManager2"),
+            miniPlacementOps2: document.getElementById("miniPlacementOps2"),
+            errorsValue: document.getElementById("errorsValue"),
+            placedValue: document.getElementById("placedValue"),
+            opsValue: document.getElementById("opsValue"),
+            usageValue: document.getElementById("usageValue"),
+            recountErrorsValue: document.getElementById("recountErrorsValue"),
+            placementErrorsValue: document.getElementById("placementErrorsValue"),
+            botUsageStatsValue: document.getElementById("botUsageStatsValue"),
+            botUsageStatsSpectrum: document.getElementById("botUsageStatsSpectrum"),
+            wrongCategoryPlacementValue: document.getElementById("wrongCategoryPlacementValue"),
+            errorsTrend: document.getElementById("errorsTrend"),
+            placedTrend: document.getElementById("placedTrend"),
+            opsTrend: document.getElementById("opsTrend"),
+            usageTrend: document.getElementById("usageTrend"),
+            recountErrorsTrend: document.getElementById("recountErrorsTrend"),
+            placementErrorsTrend: document.getElementById("placementErrorsTrend"),
+            botUsageStatsTrend: document.getElementById("botUsageStatsTrend"),
+            wrongCategoryPlacementTrend: document.getElementById("wrongCategoryPlacementTrend"),
+            operationsTable: document.getElementById("operationsTable"),
+            tableLabel: document.getElementById("tableLabel"),
+            monthStatus: document.getElementById("monthStatus"),
+            metricsNavLabel: document.getElementById("metricsNavLabel"),
+            sidePlacedCaption: document.getElementById("sidePlacedCaption"),
+            placedCardCaption: document.getElementById("placedCardCaption"),
+            focusText: document.getElementById("focusText"),
+            actionText: document.getElementById("actionText"),
+            heroChartBars: document.getElementById("heroChartBars"),
+            comparisonGrid: document.getElementById("comparisonGrid"),
+            compareMonthText: document.getElementById("compareMonthText"),
+            sheetStatus: document.getElementById("sheetStatus"),
+            errorsCardLabel: document.getElementById("errorsCardLabel")
+        };
+
+        function makeAvatar(name, shift) {
+            const initials = name
+                .split(" ")
+                .map(part => part[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase();
+
+            const palette = {
+                "1 смена": ["#ff9f43", "#ff7a1a"],
+                "2 смена": ["#57b3ff", "#1b7bd7"],
+                "3 смена": ["#42d7c6", "#217fa1"],
+                "4 смена": ["#ffd36a", "#ff9330"]
+            };
+
+            const [c1, c2] = palette[shift] || ["#ff9f43", "#42d7c6"];
+            const svg = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220">
+                    <defs>
+                        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="${c1}" />
+                            <stop offset="100%" stop-color="${c2}" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="220" height="220" rx="44" fill="#0f1520"/>
+                    <circle cx="110" cy="85" r="42" fill="url(#g)" opacity="0.95"/>
+                    <path d="M52 188c12-32 39-49 58-49s46 17 58 49" fill="url(#g)" opacity="0.92"/>
+                    <circle cx="172" cy="48" r="14" fill="${c1}" opacity="0.75"/>
+                    <text x="110" y="206" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#f3f6fb">${initials}</text>
+                </svg>
+            `;
+            return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+        }
+
+        function formatNumber(value) {
+            return new Intl.NumberFormat("ru-RU").format(value);
+        }
+
+        function buildChart(values) {
+            const heights = values.map(value => Math.max(18, Math.min(92, value)));
+            const barsHtml = heights.map((value, index) => `
+                <div class="dyn-bar">
+                    <div class="dyn-cap"></div>
+                    <div class="dyn-fill" style="--fill:${value}%; animation-delay:${index * 0.12}s"></div>
+                </div>
+            `).join("");
+
+            if (elements.heroChartBars) {
+                elements.heroChartBars.innerHTML = barsHtml;
+            }
+        }
+
+        function renderHeroEKG() {
+            const width = 1050;
+            const height = 240;
+            
+            let pathData = "M 0 120 ";
+            for (let i = 0; i < 4; i++) {
+                let offsetX = i * 350;
+                pathData += `L ${offsetX + 100} 120 `;
+                pathData += `C ${offsetX + 110} 120, ${offsetX + 115} 105, ${offsetX + 125} 105 `;
+                pathData += `C ${offsetX + 135} 105, ${offsetX + 140} 120, ${offsetX + 150} 120 `;
+                pathData += `L ${offsetX + 170} 120 `;
+                pathData += `L ${offsetX + 185} 30 `; // Tall spike
+                pathData += `L ${offsetX + 205} 210 `; // Deep spike
+                pathData += `L ${offsetX + 220} 120 `;
+                pathData += `C ${offsetX + 230} 120, ${offsetX + 240} 95, ${offsetX + 255} 95 `;
+                pathData += `C ${offsetX + 270} 95, ${offsetX + 280} 120, ${offsetX + 290} 120 `;
+                pathData += `L ${offsetX + 350} 120 `;
+            }
+
+            const svg = `
+                <svg viewBox="0 0 ${width} ${height}" style="width:100%; height:100%; background: #020c1b;" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+                    <defs>
+                        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(43, 210, 255, 0.1)" stroke-width="1.5"/>
+                        </pattern>
+                        <filter id="ekgGlow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="4" result="blur1" />
+                            <feGaussianBlur stdDeviation="8" result="blur2" />
+                            <feMerge>
+                                <feMergeNode in="blur2" />
+                                <feMergeNode in="blur1" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                        <linearGradient id="lineFade" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stop-color="rgba(43, 210, 255, 0)" />
+                            <stop offset="60%" stop-color="rgba(43, 210, 255, 1)" />
+                            <stop offset="100%" stop-color="rgba(43, 210, 255, 1)" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <rect width="100%" height="100%" fill="url(#grid)" />
+                    
+                    <path d="${pathData}" fill="none" stroke="#2bd2ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3000" stroke-dashoffset="3000" filter="url(#ekgGlow)" opacity="0.9">
+                        <animate attributeName="stroke-dashoffset" values="3000; 1600" dur="4s" repeatCount="indefinite" />
+                    </path>
+
+                    <g filter="url(#ekgGlow)">
+                        <!-- Star Flare -->
+                        <path d="M-20,0 L20,0 M0,-20 L0,20" stroke="#fff" stroke-width="2" opacity="0.8">
+                            <animate attributeName="opacity" values="1;0.4;1" dur="0.1s" repeatCount="indefinite" />
+                            <animateMotion dur="4s" repeatCount="indefinite" path="${pathData}" />
+                        </path>
+                        <circle r="4" fill="#ffffff">
+                            <animateMotion dur="4s" repeatCount="indefinite" path="${pathData}" />
+                        </circle>
+                        <circle r="12" fill="#2bd2ff" opacity="0.5">
+                            <animate attributeName="r" values="8; 25" dur="0.8s" repeatCount="indefinite" />
+                            <animate attributeName="opacity" values="0.8; 0" dur="0.8s" repeatCount="indefinite" />
+                            <animateMotion dur="4s" repeatCount="indefinite" path="${pathData}" />
+                        </circle>
+                    </g>
+                </svg>
+            `;
+
+            const container = document.getElementById('heroPulseContainer');
+            if (container) container.innerHTML = svg;
+        }
+
+        function renderOperations(operations) {
+            if (!elements.operationsTable) {
+                return;
+            }
+
+            elements.operationsTable.innerHTML = operations.map(item => `
+                <tr>
+                    <td>${item.id}</td>
+                    <td>${item.title}</td>
+                    <td>${item.zone}</td>
+                    <td><span class="badge ${item.badge}">${item.status}</span></td>
+                    <td>${item.time}</td>
+                </tr>
+            `).join("");
+        }
+
+        function getComparisonMetrics() {
+            return [
+                { key: "errors", label: "Ошибки за месяц", note: "Меньше значение лучше", better: "min", suffix: "" },
+                { key: "placed", label: "Размещено товара", note: "Больше значение лучше", better: "max", suffix: "" },
+                { key: "ops", label: "OPS", note: "Операционная эффективность", better: "max", suffix: "", decimals: 1 },
+                { key: "actClosedZero", label: "Акт закрыт с нулевым", note: "Сравнение актов по сменам", better: "max", suffix: "" },
+                { key: "recountErrors", label: "Ошибки пересчета", note: "Меньше значение лучше", better: "min", suffix: "" },
+                { key: "placementErrors", label: "Ошибки размещения", note: "Меньше значение лучше", better: "min", suffix: "" },
+                { key: "botUsageStats", label: "Использование бота", note: "Процент включенности в процесс", better: "max", suffix: "%" },
+                { key: "wrongCategoryPlacement", label: "Неправильные категории", note: "Меньше значение лучше", better: "min", suffix: "%" }
+            ];
+        }
+
+        function formatComparisonValue(value, metric) {
+            if (metric.decimals) {
+                return Number(value).toFixed(metric.decimals) + (metric.suffix || "");
+            }
+            return `${formatNumber(value)}${metric.suffix || ""}`;
+        }
+
+        function renderBotUsageWave(rows) {
+            const width = 360;
+            const height = 170;
+            const padX = 18;
+            const padY = 16;
+            const min = 0;
+            const max = 100;
+            const stepX = (width - padX * 2) / Math.max(rows.length - 1, 1);
+            const points = rows.map((row, index) => {
+                const x = padX + stepX * index;
+                const y = height - padY - ((row.value - min) / (max - min || 1)) * (height - padY * 2);
+                return { ...row, x, y };
+            });
+            const pathData = "M" + points.map(point => `${point.x},${point.y}`).join(' L');
+            const area = `${padX},${height - padY} L${pathData.substring(1)} L${width - padX},${height - padY}`;
+            const markers = points.map(point => `
+                <g class="wave-data-point">
+                    <circle cx="${point.x}" cy="${point.y}" r="6" fill="${point.color}" stroke="rgba(10,14,22,0.95)" stroke-width="3"></circle>
+                    <text x="${point.x}" y="${point.y - 12}" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle" pointer-events="none">${formatNumber(point.value)}%</text>
+                </g>
+            `).join('');
+            const lines = [25, 50, 75].map(level => {
+                const y = height - padY - (level / 100) * (height - padY * 2);
+                return `<line x1="${padX}" y1="${y}" x2="${width - padX}" y2="${y}"></line>`;
+            }).join('');
+
+            return `
+                <div class="compare-wave">
+                    <svg viewBox="0 0 ${width} ${height}" aria-hidden="true">
+                        <defs>
+                            <linearGradient id="botWaveStroke" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#57b3ff"></stop>
+                                <stop offset="55%" stop-color="#ffb347"></stop>
+                                <stop offset="100%" stop-color="#8a5a13"></stop>
+                            </linearGradient>
+                            <linearGradient id="botWaveArea" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="rgba(255,179,71,0.28)"></stop>
+                                <stop offset="100%" stop-color="rgba(255,179,71,0.02)"></stop>
+                            </linearGradient>
+                            <filter id="heartbeatGlow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur stdDeviation="3" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                            </filter>
+                        </defs>
+                        <g class="compare-wave-grid">${lines}</g>
+                        <polygon points="${padX},${height - padY} ${points.map(p => `${p.x},${p.y}`).join(' ')} ${width - padX},${height - padY}" fill="url(#botWaveArea)" opacity="0.35">
+                           <animate attributeName="opacity" values="0.1;0.4;0.1" dur="3s" repeatCount="indefinite" />
+                        </polygon>
+                        
+                        <path d="${pathData}" fill="none" stroke="url(#botWaveStroke)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1500" stroke-dashoffset="1500">
+                            <animate attributeName="stroke-dashoffset" values="1500;0" dur="3s" repeatCount="indefinite" />
+                        </path>
+
+                        <!-- Moving Glowing Tip -->
+                        <g filter="url(#heartbeatGlow)">
+                            <circle r="5" fill="#fff">
+                                <animate attributeName="opacity" values="1;0.3;1" dur="0.15s" repeatCount="indefinite" />
+                                <animateMotion dur="3s" repeatCount="indefinite" path="${pathData}" />
+                            </circle>
+                            <circle r="8" fill="none" stroke="#57b3ff" stroke-width="2">
+                                <animate attributeName="r" values="3; 14" dur="0.75s" repeatCount="indefinite" />
+                                <animate attributeName="opacity" values="1; 0" dur="0.75s" repeatCount="indefinite" />
+                                <animateMotion dur="3s" repeatCount="indefinite" path="${pathData}" />
+                            </circle>
+                        </g>
+
+                        ${markers}
+                    </svg>
+                    <div class="compare-wave-axis">
+                        ${points.map(point => `<span class="${point.key === activeShiftKey ? 'active' : ''}">${point.shift}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderComparisonBoard() {
+            if (!elements.comparisonGrid) return;
+
+            const shiftPalette = {
+                shift1: "#ff9330",
+                shift2: "#57b3ff",
+                shift3: "#42d7c6",
+                shift4: "#ffd36a"
+            };
+
+            const entries = Object.entries(shifts).map(([key, data]) => ({ key, data }));
+            const metrics = getComparisonMetrics();
+
+            elements.comparisonGrid.innerHTML = metrics.map(metric => {
+                const rows = entries.map(({ key, data }) => ({
+                    key,
+                    shift: data.shift,
+                    name: data.name,
+                    value: Number(data[metric.key]) || 0,
+                    color: shiftPalette[key] || "#ff9330"
+                }));
+
+                const sorted = [...rows].sort((a, b) => metric.better === "min" ? a.value - b.value : b.value - a.value);
+                const leader = sorted[0];
+                const lagger = sorted[sorted.length - 1];
+                const maxValue = Math.max(...rows.map(row => row.value), 1);
+
+                const rowsHtml = rows.map(row => {
+                    const width = Math.max(10, (row.value / maxValue) * 100);
+                    const classes = ["compare-row"];
+                    if (row.key === activeShiftKey) classes.push("active");
+                    if (row.key === leader.key) classes.push("is-leader");
+
+                    return `
+                        <div class="${classes.join(" ")}">
+                            <div class="compare-topline">
+                                <span>${row.shift}</span>
+                                <strong>${formatComparisonValue(row.value, metric)}</strong>
+                            </div>
+                            <div class="compare-line"><span style="width:${width}%; background: linear-gradient(90deg, ${row.color}, rgba(255,255,255,0.18));"></span></div>
+                        </div>
+                    `;
+                }).join("");
+
+                const chartHtml = (metric.key === "botUsageStats" || metric.key === "wrongCategoryPlacement") ? renderBotUsageWave(rows) : `<div class="compare-stack">${rowsHtml}</div>`;
+
+                return `
+                    <article class="panel compare-card">
+                        <h4>${metric.label}</h4>
+                        <div class="compare-note">${metric.note}</div>
+                        ${chartHtml}
+                        <div class="compare-summary">
+                            <span>🏆 Лидер: ${leader.shift}</span>
+                            <span>${metric.better === "min" ? "Выше всех" : "Ниже всех"}: ${lagger.shift}</span>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        }
+
+        function getMonthForms(month) {
+            const forms = {
+                "Март": { accusative: "март", genitive: "марта" },
+                "Апрель": { accusative: "апрель", genitive: "апреля" },
+                "Май": { accusative: "май", genitive: "мая" },
+                "Июнь": { accusative: "июнь", genitive: "июня" },
+                "Июль": { accusative: "июль", genitive: "июля" },
+                "Август": { accusative: "август", genitive: "августа" },
+                "Сентябрь": { accusative: "сентябрь", genitive: "сентября" },
+                "Октябрь": { accusative: "октябрь", genitive: "октября" },
+                "Ноябрь": { accusative: "ноябрь", genitive: "ноября" },
+                "Декабрь": { accusative: "декабрь", genitive: "декабря" }
+            };
+
+            return forms[month] || { accusative: month.toLowerCase(), genitive: month.toLowerCase() };
+        }
+
+        async function setMonth(month) {
+            activeMonth = month;
+            const monthForms = getMonthForms(month);
+            elements.errorsCardLabel.textContent = `Ошибки за ${monthForms.accusative}`;
+            if (elements.metricsNavLabel) elements.metricsNavLabel.textContent = `Показатели ${monthForms.genitive}`;
+            if (elements.sidePlacedCaption) elements.sidePlacedCaption.textContent = `Размещений товара за ${monthForms.accusative}`;
+            if (elements.placedCardCaption) elements.placedCardCaption.textContent = `Единиц товара размещено за ${monthForms.accusative}`;
+            if (elements.compareMonthText) elements.compareMonthText.textContent = `Сравнение 4 смен за ${monthForms.accusative}`;
+
+            document.querySelectorAll(".month-btn").forEach(button => {
+                button.classList.toggle("active", button.dataset.month === month);
+            });
+
+            await loadGoogleSheetDataForMonth(month);
+        }
+
+        function updateTrendClass(element, className) {
+            element.className = `trend ${className}`;
+        }
+
+        function detectDelimiter(line) {
+            if (line.includes(";")) return ";";
+            if (line.includes("\t")) return "\t";
+            return ",";
+        }
+
+        function parseDelimitedLine(line, delimiter) {
+            const result = [];
+            let current = "";
+            let inQuotes = false;
+
+            for (let i = 0; i < line.length; i += 1) {
+                const char = line[i];
+                const next = line[i + 1];
+
+                if (char === "\"") {
+                    if (inQuotes && next === "\"") {
+                        current += "\"";
+                        i += 1;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === delimiter && !inQuotes) {
+                    result.push(current.trim());
+                    current = "";
+                } else {
+                    current += char;
+                }
+            }
+
+            result.push(current.trim());
+            return result;
+        }
+
+        function normalizeMonth(value) {
+            return String(value || "").trim().toLowerCase();
+        }
+
+        function updateShiftFromRow(row) {
+            const shift = shifts[row.shift_key];
+            if (!shift) return;
+
+            shift.name = row.name || shift.name;
+            shift.role = row.role || shift.role;
+            shift.employees = Number(row.employees || shift.employees);
+            shift.errors = Number(row.errors || shift.errors);
+            shift.placed = Number(row.placed || shift.placed);
+            shift.ops = Number(row.ops || shift.ops);
+            shift.usage = Number(row.usage || shift.usage);
+            shift.status = row.status || shift.status;
+            shift.bestZone = row.bestZone || shift.bestZone;
+            shift.score = Number(row.score || shift.score);
+            shift.monthStatus = row.monthStatus || shift.monthStatus;
+            shift.focus = row.focus || shift.focus;
+            shift.action = row.action || shift.action;
+            shift.recountManager = row.recountManager || shift.recountManager;
+            shift.recountOps = Number(row.recountOps || shift.recountOps);
+            shift.placementManager1 = row.placementManager1 || (row.placementManager ? row.placementManager.split("/")[0].trim() : shift.placementManager1);
+            shift.placementOps1 = Number(row.placementOps1 || row.placementOps || shift.placementOps1);
+            shift.placementManager2 = row.placementManager2 || (row.placementManager && row.placementManager.includes("/") ? row.placementManager.split("/")[1].trim() : shift.placementManager2);
+            shift.placementOps2 = Number(row.placementOps2 || row.placementOps || shift.placementOps2);
+            shift.actClosedZero = Number(row.actClosedZero || shift.actClosedZero);
+            shift.recountErrors = Number(row.recountErrors || shift.recountErrors);
+            shift.placementErrors = Number(row.placementErrors || shift.placementErrors);
+            shift.botUsageStats = Number(row.botUsageStats || shift.botUsageStats);
+            shift.wrongCategoryPlacement = Number(row.wrongCategoryPlacement || shift.wrongCategoryPlacement);
+            shift.metrics.accuracy = Number(row.accuracy || shift.metrics.accuracy);
+            shift.metrics.speed = Number(row.speed || shift.metrics.speed);
+            shift.metrics.scan = Number(row.scan || shift.metrics.scan);
+            shift.metrics.plan = Number(row.plan || shift.metrics.plan);
+            shift.hero.errors = `${formatNumber(shift.errors)} случаев`;
+            shift.hero.placed = `${formatNumber(shift.placed)} ед.`;
+            shift.hero.usage = `${shift.usage}%`;
+        }
+
+        function rebuildShiftsForMonth(month) {
+            shifts = JSON.parse(JSON.stringify(baseShifts));
+            const target = normalizeMonth(month);
+            const relevantRows = sheetRows.filter(row => !row.month || normalizeMonth(row.month) === target);
+            relevantRows.forEach(updateShiftFromRow);
+        }
+
+        function loadGoogleSheetDataForMonth(month) {
+            return new Promise((resolve) => {
+                elements.sheetStatus.textContent = "Загрузка данных " + month + "...";
+                const script = document.createElement('script');
+                const callbackName = 'gvizCallback_' + Date.now() + Math.floor(Math.random() * 1000);
+
+                window[callbackName] = function (json) {
+                    try {
+                        const headers = json.table.cols.map(c => c ? c.label : '');
+                        const newRows = json.table.rows.map(row => {
+                            const obj = {};
+                            headers.forEach((h, i) => {
+                                if (h) {
+                                    if (row.c[i]) {
+                                        obj[h] = row.c[i].f !== undefined && row.c[i].f !== null ? String(row.c[i].f) : (row.c[i].v !== null && row.c[i].v !== undefined ? String(row.c[i].v) : "");
+                                    } else {
+                                        obj[h] = "";
+                                    }
+                                }
+                            });
+                            return obj;
+                        });
+
+                        sheetRows = newRows.filter(row => !row.entry_type || row.entry_type === "shift");
+                        rebuildShiftsForMonth(month);
+                        elements.sheetStatus.textContent = "Google Sheets подключен";
+                    } catch (e) {
+                        elements.sheetStatus.textContent = "Ошибка при чтении данных из Google Sheets";
+                    }
+                    setShift(activeShiftKey);
+                    delete window[callbackName];
+                    script.remove();
+                    resolve();
+                };
+
+                script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;responseHandler:${callbackName}&sheet=${encodeURIComponent(month)}`;
+                script.onerror = function () {
+                    elements.sheetStatus.textContent = "Не удалось загрузить данные из Google Sheets. Проверьте права доступа.";
+                    setShift(activeShiftKey);
+                    delete window[callbackName];
+                    script.remove();
+                    resolve();
+                };
+                document.body.appendChild(script);
+            });
+        }
+
+
+        function setShift(key) {
+            activeShiftKey = key;
+            const data = shifts[key];
+
+            elements.avatar.src = data.avatar || makeAvatar(data.name, data.shift);
+            elements.shiftLabel.textContent = data.shift;
+            elements.profileName.textContent = data.name;
+            elements.profileAge.textContent = `${data.age} лет`;
+            elements.profileRole.textContent = data.role;
+            elements.miniEmployees.textContent = `${data.employees} человек`;
+            elements.miniOps.textContent = data.ops.toFixed(1);
+            elements.miniRecountManager.textContent = data.recountManager;
+            elements.miniRecountOps.textContent = data.recountOps;
+            elements.miniPlacementManager1.textContent = data.placementManager1;
+            elements.miniPlacementOps1.textContent = data.placementOps1;
+            elements.miniPlacementManager2.textContent = data.placementManager2;
+            elements.miniPlacementOps2.textContent = data.placementOps2;
+
+            elements.errorsValue.textContent = formatNumber(data.errors);
+            elements.placedValue.textContent = formatNumber(data.placed);
+            elements.opsValue.textContent = data.ops.toFixed(1);
+            elements.usageValue.textContent = formatNumber(data.actClosedZero);
+            elements.recountErrorsValue.textContent = formatNumber(data.recountErrors);
+            elements.placementErrorsValue.textContent = formatNumber(data.placementErrors);
+            elements.botUsageStatsValue.textContent = `${data.botUsageStats}%`;
+            if (elements.botUsageStatsSpectrum) elements.botUsageStatsSpectrum.style.left = `${Math.max(0, Math.min(100, data.botUsageStats))}%`;
+            elements.wrongCategoryPlacementValue.textContent = `${data.wrongCategoryPlacement}%`;
+
+            elements.errorsTrend.textContent = data.trend.errors;
+            elements.placedTrend.textContent = data.trend.placed;
+            elements.opsTrend.textContent = data.trend.ops;
+            elements.usageTrend.textContent = "▲ под контролем";
+
+            updateTrendClass(elements.errorsTrend, data.trend.errorsClass);
+            updateTrendClass(elements.placedTrend, "up");
+            updateTrendClass(elements.opsTrend, "up");
+            updateTrendClass(elements.usageTrend, "up");
+            updateTrendClass(elements.recountErrorsTrend, "down");
+            updateTrendClass(elements.placementErrorsTrend, "down");
+            updateTrendClass(elements.botUsageStatsTrend, "up");
+            updateTrendClass(elements.wrongCategoryPlacementTrend, "down");
+
+            renderOperations(data.operations);
+            buildChart(data.week);
+            renderComparisonBoard();
+            renderHeroEKG(key);
+
+            if (elements.tableLabel) {
+                elements.tableLabel.textContent = data.shift;
+            }
+
+            if (elements.monthStatus) {
+                elements.monthStatus.textContent = data.monthStatus;
+            }
+
+            if (elements.focusText) {
+                elements.focusText.textContent = data.focus;
+            }
+
+            if (elements.actionText) {
+                elements.actionText.textContent = data.action;
+            }
+
+            document.querySelectorAll(".shift-btn").forEach(button => {
+                button.classList.toggle("active", button.dataset.shift === key);
+            });
+        }
+
+        document.querySelectorAll(".shift-btn").forEach(button => {
+            button.addEventListener("click", () => setShift(button.dataset.shift));
+        });
+
+        document.querySelectorAll(".month-btn").forEach(button => {
+            button.addEventListener("click", () => setMonth(button.dataset.month));
+        });
+
+        function updateDateTime() {
+            const dateTimeElement = document.getElementById("currentDateTime");
+            if (dateTimeElement) {
+                const now = new Date();
+                const formattedDate = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }).replace(' г.', '');
+                const formattedTime = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                dateTimeElement.textContent = `Сегодня: ${formattedDate}, ${formattedTime}`;
+            }
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        setShift("shift1");
+        setMonth("Март");
+    </script>
+</body>
+
+</html>
