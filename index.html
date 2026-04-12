@@ -2039,6 +2039,62 @@
             font-weight: 700;
         }
 
+        .bot-daily-chart {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            margin-top: 16px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 24px 20px 30px;
+        }
+
+        .chart-hover-col .hover-content {
+            opacity: 0;
+            transition: opacity 0.1s;
+            pointer-events: none;
+        }
+
+        .chart-hover-col:hover .hover-content {
+            opacity: 1;
+        }
+
+        .legend-chips {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .legend-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--muted);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 12px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .legend-chip:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .legend-chip.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .legend-chip span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -2175,6 +2231,117 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .activity-card {
+            margin-left: auto;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .activity-card h4 {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .calendar-container {
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 44px);
+            justify-content: center;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #57b3ff;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 44px);
+            justify-content: center;
+            gap: 4px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .calendar-day {
+            height: 20px;
+            line-height: 20px;
+            padding: 0;
+            color: #dbe6f7;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            transition: background 0.2s, color 0.1s;
+        }
+
+        .calendar-day:hover {
+            z-index: 2;
+        }
+
+        .calendar-day:not(.working):not(.muted):hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+        }
+
+        .calendar-day.muted {
+            color: rgba(255, 255, 255, 0.15);
+            pointer-events: none;
+        }
+
+        .calendar-day.working {
+            font-weight: bold;
+            color: #fff;
+            border-radius: 4px;
+        }
+
+        .calendar-day .tooltip-text {
+            visibility: hidden;
+            background-color: #121927;
+            color: #fff;
+            text-align: center;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            position: absolute;
+            z-index: 10;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+            pointer-events: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .calendar-day:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -2263,7 +2430,18 @@
                                 <div class="shift-label" id="shiftLabel">1 смена</div>
                                 <h3 id="profileName">Karimov Ilhom</h3>
                                 <p class="profile-age" id="profileAge">28лет</p>
-                                <p id="profileRole">Старший смены отдела товародвижения по выходящему потоку.</p>
+                                <p id="profileRole">Старший смен отдела товародвижения по выходящему потоку.</p>
+                            </div>
+                            <div class="activity-card">
+                                <div class="calendar-container">
+                                    <div class="calendar-header">
+                                        <span id="activityMonthLabel">Март 2026</span>
+                                    </div>
+                                    <div class="calendar-weekdays">
+                                        <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+                                    </div>
+                                    <div id="activityGrid" class="calendar-grid"></div>
+                                </div>
                             </div>
                         </div>
 
@@ -2312,6 +2490,68 @@
                                     </div>
                                 </div>
                                 <div class="hero-monitor-label">Мониторинг Отдел товародвижения Входящий поток</div>
+                                <div id="heroLiveDateTimeContainer" style="text-align: center; margin-top: 15px;">
+                                    <style>
+                                        @import url('https://fonts.cdnfonts.com/css/ds-digital');
+                                        .analog-digital-clock {
+                                            font-family: 'DS-Digital', monospace;
+                                            color: #20ff20;
+                                            background: transparent;
+                                            display: inline-block;
+                                            padding: 10px 30px 15px;
+                                        }
+                                        .adc-date {
+                                            font-size: 36px;
+                                            color: #00cc00;
+                                            letter-spacing: 4px;
+                                            text-align: left;
+                                            margin-bottom: 2px;
+                                            text-shadow: 0 0 8px rgba(32,255,32,0.6);
+                                        }
+                                        .adc-time {
+                                            font-size: 90px;
+                                            font-weight: normal;
+                                            letter-spacing: 2px;
+                                            line-height: 1;
+                                            text-shadow: 0 0 12px #20ff20, 0 0 25px #20ff20;
+                                        }
+                                        .adc-blink {
+                                            animation: blinker 1s linear infinite;
+                                        }
+                                        @keyframes blinker {
+                                            50% { opacity: 0.1; }
+                                        }
+                                    </style>
+                                    <div class="analog-digital-clock">
+                                        <div class="adc-date" id="heroLiveDate">--.--.----</div>
+                                        <div class="adc-time">
+                                            <span id="heroLiveTimeH">--</span><span class="adc-blink" style="position:relative; top:-5px;">:</span><span id="heroLiveTimeM">--</span><span style="font-size: 40px; color: #00cc00; margin-left: 12px; text-shadow: 0 0 8px #00cc00;" id="heroLiveTimeS">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    function updateHeroLiveTime() {
+                                        const dateEl = document.getElementById('heroLiveDate');
+                                        const hhEl = document.getElementById('heroLiveTimeH');
+                                        const mmEl = document.getElementById('heroLiveTimeM');
+                                        const ssEl = document.getElementById('heroLiveTimeS');
+                                        if(!dateEl) return;
+                                        const now = new Date();
+                                        const dd = String(now.getDate()).padStart(2, '0');
+                                        const mm = String(now.getMonth() + 1).padStart(2, '0');
+                                        const yyyy = now.getFullYear();
+                                        const HH = String(now.getHours()).padStart(2, '0');
+                                        const MM = String(now.getMinutes()).padStart(2, '0');
+                                        const SS = String(now.getSeconds()).padStart(2, '0');
+                                        
+                                        dateEl.textContent = dd + "." + mm + "." + yyyy;
+                                        hhEl.textContent = HH;
+                                        mmEl.textContent = MM;
+                                        ssEl.textContent = SS;
+                                    }
+                                    updateHeroLiveTime();
+                                    setInterval(updateHeroLiveTime, 1000);
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -2433,6 +2673,38 @@
                             <div class="status-chip">4 смены</div>
                         </div>
                         <div class="compare-grid" id="comparisonGrid"></div>
+                    </article>
+                </section>
+
+                <section class="compare-section" style="margin-top: 16px;">
+                    <article class="panel section-card">
+                        <div class="section-head" style="flex-direction: column; align-items: stretch; gap: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                <div>
+                                    <h3>Ежедневная динамика использования бота</h3>
+                                    <div class="subtext" id="botDailySubtext">Статистика по сменам за март</div>
+                                </div>
+                                <div class="status-chip">31 день</div>
+                            </div>
+                            <div class="legend-chips" id="botDailyLegend"></div>
+                        </div>
+                        <div class="bot-daily-chart" id="botDailyChartContainer"></div>
+                    </article>
+                </section>
+
+                <section class="compare-section" style="margin-top: 16px;">
+                    <article class="panel section-card">
+                        <div class="section-head" style="flex-direction: column; align-items: stretch; gap: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                <div>
+                                    <h3>Ежедневная динамика неверных категорий</h3>
+                                    <div class="subtext" id="wrongCatDailySubtext">Статистика по сменам за март</div>
+                                </div>
+                                <div class="status-chip">31 день</div>
+                            </div>
+                            <div class="legend-chips" id="wrongCatDailyLegend"></div>
+                        </div>
+                        <div class="bot-daily-chart" id="wrongCatDailyChartContainer"></div>
                     </article>
                 </section>
 
@@ -2673,7 +2945,8 @@
 
         let shifts = JSON.parse(JSON.stringify(baseShifts));
         let sheetRows = [];
-        let activeMonth = "Март";
+        const staticMonthNamesRU = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+        let activeMonth = staticMonthNamesRU[new Date().getMonth()];
         let activeShiftKey = "shift1";
 
         const elements = {
@@ -2774,73 +3047,491 @@
             }
         }
 
-        function renderHeroEKG() {
-            const width = 1050;
-            const height = 240;
-            
-            let pathData = "M 0 120 ";
-            for (let i = 0; i < 4; i++) {
-                let offsetX = i * 350;
-                pathData += `L ${offsetX + 100} 120 `;
-                pathData += `C ${offsetX + 110} 120, ${offsetX + 115} 105, ${offsetX + 125} 105 `;
-                pathData += `C ${offsetX + 135} 105, ${offsetX + 140} 120, ${offsetX + 150} 120 `;
-                pathData += `L ${offsetX + 170} 120 `;
-                pathData += `L ${offsetX + 185} 30 `; // Tall spike
-                pathData += `L ${offsetX + 205} 210 `; // Deep spike
-                pathData += `L ${offsetX + 220} 120 `;
-                pathData += `C ${offsetX + 230} 120, ${offsetX + 240} 95, ${offsetX + 255} 95 `;
-                pathData += `C ${offsetX + 270} 95, ${offsetX + 280} 120, ${offsetX + 290} 120 `;
-                pathData += `L ${offsetX + 350} 120 `;
+        function renderActivityGrid(shiftKey) {
+            const grid = document.getElementById('activityGrid');
+            if (!grid) return;
+
+            const monthIndex = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"].indexOf(activeMonth);
+            const targetMonth = monthIndex >= 0 ? monthIndex : 2;
+
+            const firstDate = new Date(2026, targetMonth, 1);
+            let startOffset = firstDate.getDay() - 1;
+            if (startOffset === -1) startOffset = 6;
+
+            const daysInMonth = new Date(2026, targetMonth + 1, 0).getDate();
+            const daysInPrevMonth = new Date(2026, targetMonth, 0).getDate();
+
+            const shiftOffsets = { "shift1": 0, "shift2": 6, "shift3": 4, "shift4": 2 };
+            const offset = shiftOffsets[shiftKey] || 0;
+
+            let html = '';
+            for (let i = 0; i < startOffset; i++) {
+                const dayNum = daysInPrevMonth - startOffset + 1 + i;
+                html += `<div class="calendar-day muted">${dayNum}</div>`;
             }
 
-            const svg = `
-                <svg viewBox="0 0 ${width} ${height}" style="width:100%; height:100%; background: #020c1b;" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
-                    <defs>
-                        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(43, 210, 255, 0.1)" stroke-width="1.5"/>
-                        </pattern>
-                        <filter id="ekgGlow" x="-50%" y="-50%" width="200%" height="200%">
-                            <feGaussianBlur stdDeviation="4" result="blur1" />
-                            <feGaussianBlur stdDeviation="8" result="blur2" />
-                            <feMerge>
-                                <feMergeNode in="blur2" />
-                                <feMergeNode in="blur1" />
-                                <feMergeNode in="SourceGraphic" />
-                            </feMerge>
-                        </filter>
-                        <linearGradient id="lineFade" x1="0" y1="0" x2="1" y2="0">
-                            <stop offset="0%" stop-color="rgba(43, 210, 255, 0)" />
-                            <stop offset="60%" stop-color="rgba(43, 210, 255, 1)" />
-                            <stop offset="100%" stop-color="rgba(43, 210, 255, 1)" />
-                        </linearGradient>
-                    </defs>
-                    
-                    <rect width="100%" height="100%" fill="url(#grid)" />
-                    
-                    <path d="${pathData}" fill="none" stroke="#2bd2ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3000" stroke-dashoffset="3000" filter="url(#ekgGlow)" opacity="0.9">
-                        <animate attributeName="stroke-dashoffset" values="3000; 1600" dur="4s" repeatCount="indefinite" />
-                    </path>
+            for (let day = 1; day <= daysInMonth; day++) {
+                const scheduleState = (day - 1 + offset) % 8;
+                const isDayShift = scheduleState === 0 || scheduleState === 1;
+                const isNightShift = scheduleState === 4 || scheduleState === 5;
+                const isWorking = isDayShift || isNightShift;
 
-                    <g filter="url(#ekgGlow)">
-                        <!-- Star Flare -->
-                        <path d="M-20,0 L20,0 M0,-20 L0,20" stroke="#fff" stroke-width="2" opacity="0.8">
-                            <animate attributeName="opacity" values="1;0.4;1" dur="0.1s" repeatCount="indefinite" />
-                            <animateMotion dur="4s" repeatCount="indefinite" path="${pathData}" />
-                        </path>
-                        <circle r="4" fill="#ffffff">
-                            <animateMotion dur="4s" repeatCount="indefinite" path="${pathData}" />
-                        </circle>
-                        <circle r="12" fill="#2bd2ff" opacity="0.5">
-                            <animate attributeName="r" values="8; 25" dur="0.8s" repeatCount="indefinite" />
-                            <animate attributeName="opacity" values="0.8; 0" dur="0.8s" repeatCount="indefinite" />
-                            <animateMotion dur="4s" repeatCount="indefinite" path="${pathData}" />
-                        </circle>
+                if (isWorking) {
+                    const shiftColor = isNightShift ? "#ff5c5c" : "#37d89d";
+                    const shiftTypeStr = isNightShift ? "Ночь" : "День";
+
+                    html += `<div class="calendar-day working" style="background: ${shiftColor}">
+                                 ${day}
+                                 <span class="tooltip-text">${day} ${activeMonth.toLowerCase()} • ${shiftTypeStr}</span>
+                             </div>`;
+                } else {
+                    html += `<div class="calendar-day">
+                                 ${day}
+                                 <span class="tooltip-text">${day} ${activeMonth.toLowerCase()} • Выходной</span>
+                             </div>`;
+                }
+            }
+
+            const totalCells = startOffset + daysInMonth;
+            const trailingCells = (7 - (totalCells % 7)) % 7;
+            for (let i = 1; i <= trailingCells; i++) {
+                html += `<div class="calendar-day muted">${i}</div>`;
+            }
+
+            grid.innerHTML = html;
+
+            const monthLabel = document.getElementById('activityMonthLabel');
+            if (monthLabel) monthLabel.textContent = `${activeMonth} 2026`;
+        }
+
+        let trendAnimId = null;
+
+        function renderHeroTrend(shiftKey) {
+            const width = 1050;
+            const height = 240;
+            const container = document.getElementById('heroPulseContainer');
+            if (!container) return;
+
+            if (trendAnimId) {
+                cancelAnimationFrame(trendAnimId);
+                trendAnimId = null;
+            }
+
+            container.innerHTML = `<canvas id="trendCanvas" width="${width}" height="${height}" style="width:100%; height:100%; background: #020c1b; border-radius: 16px;"></canvas>`;
+            const canvas = document.getElementById('trendCanvas');
+            const ctx = canvas.getContext('2d');
+
+            let primaryColor = "#37d89d";
+            if (shiftKey === "shift2") primaryColor = "#57b3ff";
+            else if (shiftKey === "shift3") primaryColor = "#42d7c6";
+            else if (shiftKey === "shift4") primaryColor = "#ffd36a";
+            
+            function hexToRgb(hex) {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : {r: 55, g: 216, b: 157};
+            }
+            const rgb = hexToRgb(primaryColor);
+
+            const pointSpacing = 16; 
+            const numPoints = Math.floor((width * 0.55) / pointSpacing) + 2; 
+            
+            let pointsMain = [];
+            let pointsSec = [];
+            
+            for(let i=0; i<numPoints; i++) {
+                let p = i / numPoints;
+                let bgY = 220 - (120 * p) + Math.sin(p * Math.PI * 4) * 10;
+                pointsMain.push(bgY + Math.random()*5);
+                pointsSec.push(bgY + 30 + Math.random()*5);
+            }
+
+            let offsetX = 0;
+            const speedX = 2.5;
+            const speedY = 0.5;
+
+            let backgroundBars = [];
+            let nextBarTime = 0;
+
+            function spawnBar() {
+                backgroundBars.push({
+                    x: width + 20,
+                    w: 20 + Math.random() * 40,
+                    h: 50 + Math.random() * 100,
+                    opacity: 0.02 + Math.random() * 0.04
+                });
+            }
+
+            let counterVal = 1420;
+
+            function draw() {
+                ctx.clearRect(0, 0, width, height);
+
+                ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+                ctx.lineWidth = 1;
+                for(let i=0; i<width; i+=40) {
+                    ctx.beginPath();
+                    ctx.moveTo(i - (offsetX%40), 0);
+                    ctx.lineTo(i - (offsetX%40), height);
+                    ctx.stroke();
+                }
+                let offsetYPan = (Date.now() * speedY * 0.06) % 40;
+                for(let j=0; j<height; j+=40) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, j + offsetYPan);
+                    ctx.lineTo(width, j + offsetYPan);
+                    ctx.stroke();
+                }
+
+                if (Date.now() > nextBarTime) {
+                    spawnBar();
+                    nextBarTime = Date.now() + 400 + Math.random() * 800;
+                }
+                for(let i = backgroundBars.length - 1; i >= 0; i--) {
+                    let b = backgroundBars[i];
+                    b.x -= speedX * 0.5;
+                    ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${b.opacity})`;
+                    ctx.fillRect(b.x, height - b.h, b.w, b.h);
+                    if(b.x < -100) backgroundBars.splice(i, 1);
+                }
+
+                offsetX += speedX;
+                for(let i=0; i<pointsMain.length; i++) {
+                    pointsMain[i] += speedY;
+                    pointsSec[i] += speedY;
+                }
+
+                if(offsetX >= pointSpacing) {
+                    offsetX -= pointSpacing;
+                    pointsMain.shift();
+                    pointsSec.shift();
+                    
+                    let lastMain = pointsMain[pointsMain.length - 1];
+                    let nextMain = lastMain - speedY*(pointSpacing/speedX) + (Math.random() * 12 - 5);
+                    if(nextMain < 40) nextMain += 30;
+                    if(nextMain > 160) nextMain -= 20;
+                    pointsMain.push(nextMain);
+                    
+                    let lastSec = pointsSec[pointsSec.length - 1];
+                    let nextSec = lastSec - speedY*(pointSpacing/speedX) + (Math.random() * 10 - 4);
+                    if(nextSec < 80) nextSec += 20;
+                    pointsSec.push(nextSec);
+                }
+
+                ctx.beginPath();
+                ctx.moveTo(0, height);
+                for(let i=0; i<pointsSec.length; i++) {
+                    ctx.lineTo(i * pointSpacing - offsetX, pointsSec[i]);
+                }
+                let headX = (pointsMain.length - 1) * pointSpacing - offsetX;
+                ctx.lineTo(headX, height);
+                ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.05)`;
+                ctx.fill();
+
+                ctx.beginPath();
+                for(let i=0; i<pointsSec.length; i++) {
+                    let cx = i * pointSpacing - offsetX;
+                    if(i===0) ctx.moveTo(cx, pointsSec[i]);
+                    else ctx.lineTo(cx, pointsSec[i]);
+                }
+                ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3)`;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                let grad = ctx.createLinearGradient(0, 0, 0, height);
+                grad.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.25)`);
+                grad.addColorStop(1, 'rgba(2, 12, 27, 0.0)');
+
+                ctx.beginPath();
+                ctx.moveTo(0, height);
+                for(let i=0; i<pointsMain.length; i++) {
+                    ctx.lineTo(i * pointSpacing - offsetX, pointsMain[i]);
+                }
+                ctx.lineTo(headX, height);
+                ctx.fillStyle = grad;
+                ctx.fill();
+
+                ctx.beginPath();
+                for(let i=0; i<pointsMain.length; i++) {
+                    let cx = i * pointSpacing - offsetX;
+                    if(i===0) ctx.moveTo(cx, pointsMain[i]);
+                    else ctx.lineTo(cx, pointsMain[i]);
+                }
+                ctx.strokeStyle = primaryColor;
+                ctx.lineWidth = 3;
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = primaryColor;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                let headY = pointsMain[pointsMain.length - 1];
+                ctx.beginPath();
+                ctx.moveTo(headX, headY);
+                ctx.quadraticCurveTo(headX + 150, headY - 20, width, Math.max(-50, headY - 200));
+                
+                let projGrad = ctx.createLinearGradient(headX, 0, width, 0);
+                projGrad.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.6)`);
+                projGrad.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.0)`);
+                
+                ctx.strokeStyle = projGrad;
+                ctx.setLineDash([6, 6]);
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.beginPath();
+                ctx.arc(headX, headY, 18 + Math.sin(Date.now()/100)*4, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.4)`;
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(headX, headY, 6, 0, Math.PI*2);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+
+                counterVal += Math.random() * 0.4;
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 16px Tahoma';
+                ctx.fillText(`+${Math.floor(counterVal)} UTS`, headX - 30, headY - 35);
+                
+                ctx.fillStyle = primaryColor;
+                ctx.font = '11px Tahoma';
+                ctx.fillText('DYNAMIC GROWTH', headX - 30, headY - 55);
+
+                trendAnimId = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        let activeBotChartShift = 'all';
+        window.filterBotDailyChart = function (shiftKey) {
+            activeBotChartShift = shiftKey;
+            renderBotDailyChart();
+        };
+
+        function renderBotDailyChart() {
+            const container = document.getElementById("botDailyChartContainer");
+            if (!container) return;
+
+            const daysCount = 31;
+            const width = 1000;
+            const height = 180;
+            const padX = 20;
+            const padY = 20;
+
+            const palette = {
+                shift1: "#ff9330",
+                shift2: "#57b3ff",
+                shift3: "#42d7c6",
+                shift4: "#ffd36a"
+            };
+
+            let svgLines = '';
+            let legendHtml = `<div class="legend-chip ${activeBotChartShift === 'all' ? 'active' : ''}" onclick="filterBotDailyChart('all')"><span></span>All</div>`;
+
+            const monthObj = getMonthForms(activeMonth);
+            const shortMonth = monthObj.genitive.substring(0, 3);
+
+            const dates = [];
+            for (let i = 1; i <= daysCount; i++) {
+                dates.push(`${i}`);
+            }
+
+            const entries = Object.entries(shifts);
+            let dailyPoints = Array.from({ length: daysCount }, () => []);
+            const stepX = (width - padX * 2) / (daysCount - 1);
+
+            entries.forEach(([key, data]) => {
+                const baseVal = Number(data.botUsageStats) || 50;
+                const color = palette[key] || "#fff";
+                const isActive = activeBotChartShift === 'all' || activeBotChartShift === key;
+
+                legendHtml += `<div class="legend-chip ${activeBotChartShift === key ? 'active' : ''}" style="opacity: ${isActive ? 1 : 0.5}" onclick="filterBotDailyChart('${key}')"><span style="background:${color}"></span>${data.shift}</div>`;
+
+                if (!isActive) return;
+
+                let points = [];
+                for (let i = 0; i < daysCount; i++) {
+                    let rand = Math.sin(key.charCodeAt(5) * 10 + i * 3) * 15;
+                    let val = Math.max(0, Math.min(100, baseVal + rand));
+                    let x = padX + i * stepX;
+                    let y = height - padY - (val / 100) * (height - padY * 2);
+                    points.push({ x, y });
+
+                    dailyPoints[i].push({ shift: data.shift, color, y, val });
+                }
+
+                const pathData = "M" + points.map(p => `${p.x},${p.y}`).join(' L');
+                svgLines += `
+                    <path d="${pathData}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
+                       <animate attributeName="stroke-dasharray" values="0,2500; 2500,0" dur="2.5s" fill="freeze" />
+                    </path>
+                `;
+            });
+
+            let tooltipsHtml = dailyPoints.map((dayPts, i) => {
+                if (dayPts.length === 0) return '';
+                let x = padX + i * stepX;
+                let bgHeight = dayPts.length * 16 + 12;
+                let isRightEdge = i > daysCount - 6;
+                let bgX = x + (isRightEdge ? -130 : 10);
+
+                return `
+                    <g class="chart-hover-col">
+                        <rect x="${x - stepX / 2}" y="0" width="${stepX}" height="${height}" fill="transparent" style="cursor:crosshair" />
+                        <g class="hover-content">
+                            <line x1="${x}" y1="0" x2="${x}" y2="${height}" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="4" />
+                            ${dayPts.map(pt => `<circle cx="${x}" cy="${pt.y}" r="4" fill="${pt.color}" stroke="#0c111a" stroke-width="2"></circle>`).join('')}
+                            <rect x="${bgX}" y="20" width="120" height="${bgHeight}" fill="#161c25" rx="6" stroke="rgba(255,255,255,0.1)"/>
+                            ${dayPts.map((pt, idx) => `<text x="${bgX + 10}" y="${36 + idx * 16}" fill="${pt.color}" font-size="11" font-weight="bold" text-anchor="start">${pt.shift}: ${pt.val.toFixed(1)}%</text>`).join('')}
+                        </g>
                     </g>
+                `;
+            }).join('');
+
+            const xLabels = dates.map((date, i) => {
+                let x = padX + i * stepX;
+                let y = height;
+                return `<text x="${x}" y="${y}" fill="#8b9bb4" font-size="11" text-anchor="middle">${date}</text>`;
+            }).join("");
+
+            const yLines = [25, 50, 75, 100].map(val => {
+                let y = height - padY - (val / 100) * (height - padY * 2);
+                return `
+                    <line x1="${padX}" y1="${y}" x2="${width - padX}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="4"></line>
+                    <text x="${padX - 5}" y="${y + 4}" fill="#8b9bb4" font-size="11" text-anchor="end">${val}%</text>
+                `;
+            }).join("");
+
+            document.getElementById("botDailyLegend").innerHTML = legendHtml;
+
+            container.innerHTML = `
+                <svg viewBox="-30 0 ${width + 40} ${height + 14}" style="width:100%; height:100%; overflow:visible" aria-hidden="true">
+                    <g class="grid">${yLines}</g>
+                    <g class="lines">${svgLines}</g>
+                    <g class="x-axis">${xLabels}</g>
+                    <g class="tooltips">${tooltipsHtml}</g>
                 </svg>
             `;
 
-            const container = document.getElementById('heroPulseContainer');
-            if (container) container.innerHTML = svg;
+            document.getElementById("botDailySubtext").textContent = `Статистика за ${monthObj.accusative}`;
+        }
+
+        let activeWrongCatShift = 'all';
+        window.filterWrongCatChart = function (shiftKey) {
+            activeWrongCatShift = shiftKey;
+            renderWrongCategoryChart();
+        };
+
+        function renderWrongCategoryChart() {
+            const container = document.getElementById("wrongCatDailyChartContainer");
+            if (!container) return;
+
+            const daysCount = 31;
+            const width = 1000;
+            const height = 180;
+            const padX = 20;
+            const padY = 20;
+
+            const palette = {
+                shift1: "#ff9330",
+                shift2: "#57b3ff",
+                shift3: "#42d7c6",
+                shift4: "#ffd36a"
+            };
+
+            let svgLines = '';
+            let legendHtml = `<div class="legend-chip ${activeWrongCatShift === 'all' ? 'active' : ''}" onclick="filterWrongCatChart('all')"><span></span>All</div>`;
+
+            const monthObj = getMonthForms(activeMonth);
+            const shortMonth = monthObj.genitive.substring(0, 3);
+
+            const dates = [];
+            for (let i = 1; i <= daysCount; i++) {
+                dates.push(`${i}`);
+            }
+
+            const entries = Object.entries(shifts);
+            let dailyPoints = Array.from({ length: daysCount }, () => []);
+            const stepX = (width - padX * 2) / (daysCount - 1);
+
+            entries.forEach(([key, data]) => {
+                const baseVal = Number(data.wrongCategoryPlacement) || 12;
+                const color = palette[key] || "#fff";
+                const isActive = activeWrongCatShift === 'all' || activeWrongCatShift === key;
+
+                legendHtml += `<div class="legend-chip ${activeWrongCatShift === key ? 'active' : ''}" style="opacity: ${isActive ? 1 : 0.5}" onclick="filterWrongCatChart('${key}')"><span style="background:${color}"></span>${data.shift}</div>`;
+
+                if (!isActive) return;
+
+                let points = [];
+                for (let i = 0; i < daysCount; i++) {
+                    let rand = Math.sin(key.charCodeAt(5) * 15 + i * 4) * 8;
+                    let val = Math.max(0, Math.min(100, baseVal + rand));
+                    let x = padX + i * stepX;
+                    let y = height - padY - (val / 100) * (height - padY * 2);
+                    points.push({ x, y });
+
+                    dailyPoints[i].push({ shift: data.shift, color, y, val });
+                }
+
+                const pathData = "M" + points.map(p => `${p.x},${p.y}`).join(' L');
+                svgLines += `
+                    <path d="${pathData}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
+                       <animate attributeName="stroke-dasharray" values="0,2500; 2500,0" dur="2.5s" fill="freeze" />
+                    </path>
+                `;
+            });
+
+            let tooltipsHtml = dailyPoints.map((dayPts, i) => {
+                if (dayPts.length === 0) return '';
+                let x = padX + i * stepX;
+                let bgHeight = dayPts.length * 16 + 12;
+                let isRightEdge = i > daysCount - 6;
+                let bgX = x + (isRightEdge ? -130 : 10);
+
+                return `
+                    <g class="chart-hover-col">
+                        <rect x="${x - stepX / 2}" y="0" width="${stepX}" height="${height}" fill="transparent" style="cursor:crosshair" />
+                        <g class="hover-content">
+                            <line x1="${x}" y1="0" x2="${x}" y2="${height}" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="4" />
+                            ${dayPts.map(pt => `<circle cx="${x}" cy="${pt.y}" r="4" fill="${pt.color}" stroke="#0c111a" stroke-width="2"></circle>`).join('')}
+                            <rect x="${bgX}" y="20" width="120" height="${bgHeight}" fill="#161c25" rx="6" stroke="rgba(255,255,255,0.1)"/>
+                            ${dayPts.map((pt, idx) => `<text x="${bgX + 10}" y="${36 + idx * 16}" fill="${pt.color}" font-size="11" font-weight="bold" text-anchor="start">${pt.shift}: ${pt.val.toFixed(1)}%</text>`).join('')}
+                        </g>
+                    </g>
+                `;
+            }).join('');
+
+            const xLabels = dates.map((date, i) => {
+                let x = padX + i * stepX;
+                let y = height;
+                return `<text x="${x}" y="${y}" fill="#8b9bb4" font-size="11" text-anchor="middle">${date}</text>`;
+            }).join("");
+
+            const yLines = [25, 50, 75, 100].map(val => {
+                let y = height - padY - (val / 100) * (height - padY * 2);
+                return `
+                    <line x1="${padX}" y1="${y}" x2="${width - padX}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="4"></line>
+                    <text x="${padX - 5}" y="${y + 4}" fill="#8b9bb4" font-size="11" text-anchor="end">${val}%</text>
+                `;
+            }).join("");
+
+            document.getElementById("wrongCatDailyLegend").innerHTML = legendHtml;
+
+            container.innerHTML = `
+                <svg viewBox="-30 0 ${width + 40} ${height + 14}" style="width:100%; height:100%; overflow:visible" aria-hidden="true">
+                    <g class="grid">${yLines}</g>
+                    <g class="lines">${svgLines}</g>
+                    <g class="x-axis">${xLabels}</g>
+                    <g class="tooltips">${tooltipsHtml}</g>
+                </svg>
+            `;
+
+            document.getElementById("wrongCatDailySubtext").textContent = `Статистика за ${monthObj.accusative}`;
         }
 
         function renderOperations(operations) {
@@ -3226,7 +3917,10 @@
             renderOperations(data.operations);
             buildChart(data.week);
             renderComparisonBoard();
-            renderHeroEKG(key);
+            renderHeroTrend(key);
+            renderActivityGrid(key);
+            renderBotDailyChart();
+            renderWrongCategoryChart();
 
             if (elements.tableLabel) {
                 elements.tableLabel.textContent = data.shift;
@@ -3270,7 +3964,7 @@
         updateDateTime();
 
         setShift("shift1");
-        setMonth("Март");
+        setMonth(activeMonth);
     </script>
 </body>
 
