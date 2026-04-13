@@ -2091,8 +2091,9 @@
             height: 250px;
             margin-top: 16px;
             border-radius: 12px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: linear-gradient(180deg, rgba(21, 31, 56, 0.88), rgba(12, 19, 38, 0.92));
+            border: 1px solid rgba(87, 179, 255, 0.15);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 18px 34px rgba(0, 0, 0, 0.24);
             padding: 24px 20px 30px;
         }
 
@@ -2275,6 +2276,103 @@
             .profile-grid,
             .compare-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .month-toolbar {
+                display: flex;
+                gap: 8px;
+                overflow-x: auto;
+                padding-bottom: 6px;
+                scrollbar-width: thin;
+            }
+
+            .month-btn {
+                flex: 0 0 auto;
+                white-space: nowrap;
+                min-width: 92px;
+                padding: 8px 12px;
+            }
+
+            .section-card,
+            .kpi-card {
+                padding: 16px;
+            }
+
+            .bot-daily-chart {
+                height: 210px;
+                padding: 14px 8px 18px;
+                border-radius: 10px;
+            }
+
+            .legend-chips {
+                gap: 6px;
+                margin-top: 6px;
+            }
+
+            .legend-chip {
+                padding: 4px 8px;
+                font-size: 0.72rem;
+            }
+
+            .compare-summary {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+
+            .speedometer {
+                width: min(120px, 100%);
+            }
+
+            .speedometer-scale {
+                width: min(120px, 100%);
+                font-size: 0.66rem;
+                letter-spacing: 0.04em;
+            }
+
+            table {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            th,
+            td {
+                white-space: nowrap;
+            }
+
+            .calendar-weekdays,
+            .calendar-grid {
+                grid-template-columns: repeat(7, minmax(34px, 1fr));
+            }
+        }
+
+        @media (max-width: 520px) {
+            .brand h1 {
+                font-size: 1.1rem;
+            }
+
+            .kpi-value {
+                font-size: clamp(1.5rem, 9vw, 2rem);
+            }
+
+            .shift-buttons {
+                gap: 10px;
+            }
+
+            .shift-btn {
+                padding: 14px;
+            }
+
+            .bot-daily-chart {
+                height: 190px;
+                padding: 10px 6px 14px;
+            }
+
+            .status-chip {
+                font-size: 0.72rem;
+                padding: 6px 10px;
             }
         }
 
@@ -2709,7 +2807,7 @@
                     </article>
 
                     <article class="panel kpi-card">
-                        <div class="label">Размещены неправильные категории</div>
+                        <div class="label">Правильно размещенные категории</div>
                         <div class="kpi-value" id="wrongCategoryPlacementValue">50%</div>
                         <div class="speedometer-wrap">
                             <svg class="speedometer" viewBox="0 0 200 120" aria-hidden="true">
@@ -2717,9 +2815,9 @@
                                 <path d="M20 96 A80 80 0 0 1 180 96" fill="none" stroke="url(#wrongCategoryGradient)" stroke-width="12" stroke-linecap="round"></path>
                                 <defs>
                                     <linearGradient id="wrongCategoryGradient" x1="20" y1="96" x2="180" y2="96" gradientUnits="userSpaceOnUse">
-                                        <stop offset="0%" stop-color="#42d7c6"></stop>
+                                        <stop offset="0%" stop-color="#ff6d6d"></stop>
                                         <stop offset="50%" stop-color="#ffd36a"></stop>
-                                        <stop offset="100%" stop-color="#ff6d6d"></stop>
+                                        <stop offset="100%" stop-color="#42d7c6"></stop>
                                     </linearGradient>
                                 </defs>
                                 <line id="wrongCategoryPlacementNeedle" class="speedometer-needle" x1="100" y1="96" x2="100" y2="24" stroke="#f5f8ff" stroke-width="4" stroke-linecap="round"></line>
@@ -2733,8 +2831,8 @@
                             </div>
                         </div>
                         <div class="kpi-meta">
-                            <span>Доля неверно размещенных категорий</span>
-                            <span class="trend down" id="wrongCategoryPlacementTrend">▲ требует контроля</span>
+                            <span>Доля корректно размещенных категорий</span>
+                            <span class="trend up" id="wrongCategoryPlacementTrend">▲ высокий уровень точности</span>
                         </div>
                     </article>
                 </section>
@@ -2773,7 +2871,7 @@
                         <div class="section-head" style="flex-direction: column; align-items: stretch; gap: 8px;">
                             <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                                 <div>
-                                    <h3>Ежедневная динамика неверных категорий</h3>
+                                    <h3>Ежедневная динамика правильных категорий</h3>
                                     <div class="subtext" id="wrongCatDailySubtext">Статистика по сменам за март</div>
                                 </div>
                                 <div class="status-chip">31 день</div>
@@ -2781,6 +2879,38 @@
                             <div class="legend-chips" id="wrongCatDailyLegend"></div>
                         </div>
                         <div class="bot-daily-chart" id="wrongCatDailyChartContainer"></div>
+                    </article>
+                </section>
+
+                <section class="compare-section" style="margin-top: 16px;">
+                    <article class="panel section-card">
+                        <div class="section-head" style="flex-direction: column; align-items: stretch; gap: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                <div>
+                                    <h3>Ошибки пересчета по месяцам и сменам</h3>
+                                    <div class="subtext" id="recountMonthlySubtext">Помесячная статистика по сменам</div>
+                                </div>
+                                <div class="status-chip">12 месяцев</div>
+                            </div>
+                            <div class="legend-chips" id="recountMonthlyLegend"></div>
+                        </div>
+                        <div class="bot-daily-chart" id="recountMonthlyChartContainer"></div>
+                    </article>
+                </section>
+
+                <section class="compare-section" style="margin-top: 16px;">
+                    <article class="panel section-card">
+                        <div class="section-head" style="flex-direction: column; align-items: stretch; gap: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                <div>
+                                    <h3>Ошибки размещения по месяцам и сменам</h3>
+                                    <div class="subtext" id="placementMonthlySubtext">Помесячная статистика по сменам</div>
+                                </div>
+                                <div class="status-chip">12 месяцев</div>
+                            </div>
+                            <div class="legend-chips" id="placementMonthlyLegend"></div>
+                        </div>
+                        <div class="bot-daily-chart" id="placementMonthlyChartContainer"></div>
                     </article>
                 </section>
 
@@ -3122,6 +3252,22 @@
             const normalized = Math.max(0, Math.min(100, Number(value) || 0));
             const angle = -90 + (normalized / 100) * 180;
             elements.wrongCategoryPlacementNeedle.style.transform = `rotate(${angle}deg)`;
+        }
+
+        function toSmoothPath(points) {
+            if (!points.length) return "";
+            if (points.length < 3) return "M" + points.map(point => `${point.x},${point.y}`).join(" L");
+            let path = `M${points[0].x},${points[0].y}`;
+            for (let i = 0; i < points.length - 1; i++) {
+                const current = points[i];
+                const next = points[i + 1];
+                const midX = (current.x + next.x) / 2;
+                const midY = (current.y + next.y) / 2;
+                path += ` Q${current.x},${current.y} ${midX},${midY}`;
+            }
+            const last = points[points.length - 1];
+            path += ` T${last.x},${last.y}`;
+            return path;
         }
 
         function buildChart(values) {
@@ -3468,11 +3614,14 @@
                     dailyPoints[i].push({ shift: data.shift, color, y, val });
                 }
 
-                const pathData = "M" + points.map(p => `${p.x},${p.y}`).join(' L');
+                const pathData = toSmoothPath(points);
+                const areaPath = `${pathData} L${points[points.length - 1].x},${height - padY} L${points[0].x},${height - padY} Z`;
                 svgLines += `
+                    <path d="${areaPath}" fill="${color}" opacity="0.12"></path>
                     <path d="${pathData}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
                        <animate attributeName="stroke-dasharray" values="0,2500; 2500,0" dur="2.5s" fill="freeze" />
                     </path>
+                    <circle cx="${points[points.length - 1].x}" cy="${points[points.length - 1].y}" r="3.8" fill="${color}" stroke="rgba(255,255,255,0.85)" stroke-width="1.4"></circle>
                 `;
             });
 
@@ -3530,6 +3679,18 @@
             renderWrongCategoryChart();
         };
 
+        let activeRecountMonthlyShift = 'all';
+        window.filterRecountMonthlyChart = function (shiftKey) {
+            activeRecountMonthlyShift = shiftKey;
+            renderRecountMonthlyChart();
+        };
+
+        let activePlacementMonthlyShift = 'all';
+        window.filterPlacementMonthlyChart = function (shiftKey) {
+            activePlacementMonthlyShift = shiftKey;
+            renderPlacementMonthlyChart();
+        };
+
         function renderWrongCategoryChart() {
             const container = document.getElementById("wrongCatDailyChartContainer");
             if (!container) return;
@@ -3563,7 +3724,8 @@
             const stepX = (width - padX * 2) / (daysCount - 1);
 
             entries.forEach(([key, data]) => {
-                const baseVal = Number(data.wrongCategoryPlacement) || 12;
+                const baseWrong = Number(data.wrongCategoryPlacement) || 12;
+                const baseVal = Math.max(0, Math.min(100, 100 - baseWrong));
                 const color = palette[key] || "#fff";
                 const isActive = activeWrongCatShift === 'all' || activeWrongCatShift === key;
 
@@ -3582,11 +3744,14 @@
                     dailyPoints[i].push({ shift: data.shift, color, y, val });
                 }
 
-                const pathData = "M" + points.map(p => `${p.x},${p.y}`).join(' L');
+                const pathData = toSmoothPath(points);
+                const areaPath = `${pathData} L${points[points.length - 1].x},${height - padY} L${points[0].x},${height - padY} Z`;
                 svgLines += `
+                    <path d="${areaPath}" fill="${color}" opacity="0.12"></path>
                     <path d="${pathData}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
                        <animate attributeName="stroke-dasharray" values="0,2500; 2500,0" dur="2.5s" fill="freeze" />
                     </path>
+                    <circle cx="${points[points.length - 1].x}" cy="${points[points.length - 1].y}" r="3.8" fill="${color}" stroke="rgba(255,255,255,0.85)" stroke-width="1.4"></circle>
                 `;
             });
 
@@ -3638,6 +3803,132 @@
             document.getElementById("wrongCatDailySubtext").textContent = `Статистика за ${monthObj.accusative}`;
         }
 
+        function buildMonthlySeries(baseValue, shiftKey, minValue = 0, maxValue = 100) {
+            const activeMonthIndex = Math.max(0, staticMonthNamesRU.indexOf(activeMonth));
+            const shiftSeed = Number(String(shiftKey).replace("shift", "")) || 1;
+            const amp = Math.max(2, Math.min(12, baseValue * 0.22));
+            const rawValues = Array.from({ length: 12 }, (_, monthIndex) => {
+                return (
+                    Math.sin((monthIndex + shiftSeed * 0.8) * 0.92) * amp +
+                    Math.cos((monthIndex + shiftSeed) * 0.47) * (amp * 0.5)
+                );
+            });
+            const anchor = rawValues[activeMonthIndex] || 0;
+            return rawValues.map(raw => {
+                const val = baseValue + (raw - anchor);
+                return Math.max(minValue, Math.min(maxValue, val));
+            });
+        }
+
+        function renderMonthlyMetricChart({ containerId, legendId, subtextId, activeShift, filterFnName, metricKey }) {
+            const container = document.getElementById(containerId);
+            const legend = document.getElementById(legendId);
+            const subtext = document.getElementById(subtextId);
+            if (!container || !legend || !subtext) return;
+
+            const width = 1000;
+            const height = 180;
+            const padX = 24;
+            const padY = 20;
+            const monthLabels = ["ЯНВ", "ФЕВ", "МАР", "АПР", "МАЙ", "ИЮН", "ИЮЛ", "АВГ", "СЕН", "ОКТ", "НОЯ", "ДЕК"];
+            const palette = { shift1: "#ff9330", shift2: "#57b3ff", shift3: "#42d7c6", shift4: "#ffd36a" };
+            const entries = Object.entries(shifts);
+            const stepX = (width - padX * 2) / (monthLabels.length - 1);
+            let svgLines = '';
+            let monthlyPoints = Array.from({ length: monthLabels.length }, () => []);
+
+            let legendHtml = `<div class="legend-chip ${activeShift === 'all' ? 'active' : ''}" onclick="${filterFnName}('all')"><span></span>All</div>`;
+
+            entries.forEach(([key, data]) => {
+                const baseVal = Number(data[metricKey]) || 0;
+                const color = palette[key] || "#fff";
+                const isActive = activeShift === 'all' || activeShift === key;
+                legendHtml += `<div class="legend-chip ${activeShift === key ? 'active' : ''}" style="opacity:${isActive ? 1 : 0.5}" onclick="${filterFnName}('${key}')"><span style="background:${color}"></span>${data.shift}</div>`;
+                if (!isActive) return;
+
+                const maxCap = Math.max(100, baseVal + 40);
+                const values = buildMonthlySeries(baseVal, key, 0, maxCap).map(val => Math.round(val));
+                const points = values.map((val, idx) => {
+                    const x = padX + idx * stepX;
+                    const y = height - padY - (val / maxCap) * (height - padY * 2);
+                    monthlyPoints[idx].push({ shift: data.shift, color, y, val });
+                    return { x, y };
+                });
+
+                const pathData = toSmoothPath(points);
+                const areaPath = `${pathData} L${points[points.length - 1].x},${height - padY} L${points[0].x},${height - padY} Z`;
+                svgLines += `
+                    <path d="${areaPath}" fill="${color}" opacity="0.10"></path>
+                    <path d="${pathData}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"></path>
+                    <circle cx="${points[points.length - 1].x}" cy="${points[points.length - 1].y}" r="3.8" fill="${color}" stroke="rgba(255,255,255,0.85)" stroke-width="1.4"></circle>
+                `;
+            });
+
+            const tooltipsHtml = monthlyPoints.map((monthPts, idx) => {
+                if (!monthPts.length) return '';
+                const x = padX + idx * stepX;
+                const bgHeight = monthPts.length * 16 + 14;
+                const isRightEdge = idx > monthLabels.length - 3;
+                const bgX = x + (isRightEdge ? -148 : 10);
+                return `
+                    <g class="chart-hover-col">
+                        <rect x="${x - stepX / 2}" y="0" width="${stepX}" height="${height}" fill="transparent" style="cursor:crosshair" />
+                        <g class="hover-content">
+                            <line x1="${x}" y1="0" x2="${x}" y2="${height}" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="4" />
+                            ${monthPts.map(pt => `<circle cx="${x}" cy="${pt.y}" r="4" fill="${pt.color}" stroke="#0c111a" stroke-width="2"></circle>`).join('')}
+                            <rect x="${bgX}" y="16" width="138" height="${bgHeight}" fill="#161c25" rx="7" stroke="rgba(255,255,255,0.12)"/>
+                            ${monthPts.map((pt, lineIndex) => `<text x="${bgX + 10}" y="${33 + lineIndex * 16}" fill="${pt.color}" font-size="11" font-weight="bold" text-anchor="start">${pt.shift}: ${Math.round(pt.val)}</text>`).join('')}
+                        </g>
+                    </g>
+                `;
+            }).join('');
+
+            const xLabels = monthLabels.map((label, idx) => {
+                const x = padX + idx * stepX;
+                return `<text x="${x}" y="${height}" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle">${label}</text>`;
+            }).join("");
+
+            const yLines = [25, 50, 75, 100].map(level => {
+                const y = height - padY - (level / 100) * (height - padY * 2);
+                return `<line x1="${padX}" y1="${y}" x2="${width - padX}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="4"></line>`;
+            }).join("");
+
+            legend.innerHTML = legendHtml;
+            container.innerHTML = `
+                <svg viewBox="-30 0 ${width + 40} ${height + 14}" style="width:100%; height:100%; overflow:visible" aria-hidden="true">
+                    <g class="grid">${yLines}</g>
+                    <g class="lines">${svgLines}</g>
+                    <g class="x-axis">${xLabels}</g>
+                    <g class="tooltips">${tooltipsHtml}</g>
+                </svg>
+            `;
+
+            const monthObj = getMonthForms(activeMonth);
+            subtext.textContent = `Помесячная статистика по сменам, опорный месяц: ${monthObj.genitive}`;
+        }
+
+        function renderRecountMonthlyChart() {
+            renderMonthlyMetricChart({
+                containerId: "recountMonthlyChartContainer",
+                legendId: "recountMonthlyLegend",
+                subtextId: "recountMonthlySubtext",
+                activeShift: activeRecountMonthlyShift,
+                filterFnName: "filterRecountMonthlyChart",
+                metricKey: "recountErrors"
+            });
+        }
+
+        function renderPlacementMonthlyChart() {
+            renderMonthlyMetricChart({
+                containerId: "placementMonthlyChartContainer",
+                legendId: "placementMonthlyLegend",
+                subtextId: "placementMonthlySubtext",
+                activeShift: activePlacementMonthlyShift,
+                filterFnName: "filterPlacementMonthlyChart",
+                metricKey: "placementErrors"
+            });
+        }
+
         function renderOperations(operations) {
             if (!elements.operationsTable) {
                 return;
@@ -3663,7 +3954,7 @@
                 { key: "recountErrors", label: "Ошибки пересчета", note: "Меньше значение лучше", better: "min", suffix: "" },
                 { key: "placementErrors", label: "Ошибки размещения", note: "Меньше значение лучше", better: "min", suffix: "" },
                 { key: "botUsageStats", label: "Использование бота", note: "Процент включенности в процесс", better: "max", suffix: "%" },
-                { key: "wrongCategoryPlacement", label: "Неправильные категории", note: "Меньше значение лучше", better: "min", suffix: "%" }
+                { key: "wrongCategoryPlacement", label: "Правильные категории", note: "Больше значение лучше", better: "max", suffix: "%" }
             ];
         }
 
@@ -3786,13 +4077,19 @@
             const metrics = getComparisonMetrics();
 
             elements.comparisonGrid.innerHTML = metrics.map(metric => {
-                const rows = entries.map(({ key, data }) => ({
-                    key,
-                    shift: data.shift,
-                    name: data.name,
-                    value: Number(data[metric.key]) || 0,
-                    color: shiftPalette[key] || "#ff9330"
-                }));
+                const rows = entries.map(({ key, data }) => {
+                    let value = Number(data[metric.key]) || 0;
+                    if (metric.key === "wrongCategoryPlacement") {
+                        value = Math.max(0, Math.min(100, 100 - value));
+                    }
+                    return {
+                        key,
+                        shift: data.shift,
+                        name: data.name,
+                        value,
+                        color: shiftPalette[key] || "#ff9330"
+                    };
+                });
 
                 const sorted = [...rows].sort((a, b) => metric.better === "min" ? a.value - b.value : b.value - a.value);
                 const leader = sorted[0];
@@ -4032,8 +4329,9 @@
             elements.placementErrorsValue.textContent = formatNumber(data.placementErrors);
             elements.botUsageStatsValue.textContent = `${data.botUsageStats}%`;
             updateBotUsageSpeedometer(data.botUsageStats);
-            elements.wrongCategoryPlacementValue.textContent = `${data.wrongCategoryPlacement}%`;
-            updateWrongCategorySpeedometer(data.wrongCategoryPlacement);
+            const correctCategoryPlacement = Math.max(0, Math.min(100, 100 - Number(data.wrongCategoryPlacement || 0)));
+            elements.wrongCategoryPlacementValue.textContent = `${correctCategoryPlacement}%`;
+            updateWrongCategorySpeedometer(correctCategoryPlacement);
 
             elements.errorsTrend.textContent = data.trend.errors;
             elements.placedTrend.textContent = data.trend.placed;
@@ -4047,7 +4345,7 @@
             updateTrendClass(elements.recountErrorsTrend, "down");
             updateTrendClass(elements.placementErrorsTrend, "down");
             updateTrendClass(elements.botUsageStatsTrend, "up");
-            updateTrendClass(elements.wrongCategoryPlacementTrend, "down");
+            updateTrendClass(elements.wrongCategoryPlacementTrend, "up");
 
             renderOperations(data.operations);
             buildChart(data.week);
@@ -4056,6 +4354,8 @@
             renderActivityGrid(key);
             renderBotDailyChart();
             renderWrongCategoryChart();
+            renderRecountMonthlyChart();
+            renderPlacementMonthlyChart();
 
             if (elements.tableLabel) {
                 elements.tableLabel.textContent = data.shift;
