@@ -1,168 +1,177 @@
-# 🏢 Uzum Market | Warehouse Shift KPI & Analytics Dashboard
-### 📊 Omborda Smena Boshliqlari, OPS va Sifat Ko'rsatkichlarini Real-Vaqtda Boshqarish Tizimi
+# 🏢 Uzum Market | Складской Дашборд Сменных Начальников (WMS Analytics)
+### 📊 Система Мониторинга KPI, Производительности (OPS) и Контроля Качества на Главном Складе
 
 <div align="center">
 
-![Dashboard Preview](image/dashboard_preview.png)
+![Складской Дашборд](image/dashboard_preview.png)
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo%20Preview-FF6D00?style=for-the-badge&logo=googlechrome&logoColor=white)](https://theanvarow.github.io/Werehose-Dashbord/)
-[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/theanvarow/Werehose-Dashbord)
+### 🌐 **[👉 ОТКРЫТЬ LIVE DEMO В БРАУЗЕРЕ 👈](https://theanvarow.github.io/Werehose-Dashbord/)**
+
+<br/>
+
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Онлайн_Портал-FF6D00?style=for-the-badge&logo=googlechrome&logoColor=white)](https://theanvarow.github.io/Werehose-Dashbord/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Репозиторий-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/theanvarow/Werehose-Dashbord)
 [![Google Sheets](https://img.shields.io/badge/Google%20Sheets-Live%20Sync-34A853?style=for-the-badge&logo=googlesheets&logoColor=white)](https://sheets.google.com)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Chart.js](https://img.shields.io/badge/Charts-Chart.js%20v4-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)](https://www.chartjs.org/)
-[![Status](https://img.shields.io/badge/Status-Active%20Production-00C853?style=for-the-badge)](https://github.com/theanvarow/Werehose-Dashbord)
+[![Status](https://img.shields.io/badge/Статус-Активный_Продакшн-00C853?style=for-the-badge)](https://github.com/theanvarow/Werehose-Dashbord)
 
 </div>
 
 ---
 
-## 🎯 Loyiha Maqsadi (Project Objective)
+## 🎯 Цель Проекта (Project Objective)
 
-**Uzum Market Bosh Ombori (Главный Склад - OTD Kiruvchi Oqim / Входящий Поток)** bo'limida ish unumdorligini oshirish, smena boshliqlari va menejerlar faoliyatini shaffof baholash hamda operatsion xatoliklarni minimallashtirish uchun ishlab chiqilgan interaktiv analitik boshqaruv platformasi.
+**Складской Дашборд Uzum Market (Главный Склад — Отдел Товародвижения / Входящий Поток)** — это комплексная аналитическая веб-панель реального времени, разработанная для начальников смен, операционных менеджеров и руководства логистического хаба.
 
-### 📌 Asosiy Yechiladigan Muammolar:
-1. **Real-vaqt monitoringi:** 4 ta ishchi smenaning (Brigada 1, 2, 3, 4) kunlik va oylik ish unumdorligini (OPS) avtomatlashtirilgan tarzda kuzatish.
-2. **Xatoliklar nazorati:** Qayta sanash (*Пересчет*), noto'g'ri toifa joylashtirish (*Неправильные категории*) va nollik yopilgan aktlarni (*Акт закрыт с нулевым*) zudlik bilan aniqlash.
-3. **KPI va Motivatsiya:** Smena rahbarlarining oylik reytingi, ballari (Score) va asosiy fokus yo'nalishlarini vizual ko'rsatish.
-4. **Google Sheets bilan to'g'ridan-to'g'ri integratsiya:** Murakkab backend serversiz to'g'ridan-to'g'ri bulutli jadvaldan ma'lumotlarni sekundiga yangilash.
-
----
-
-## ✨ Asosiy Imkoniyatlar (Key Features)
-
-### 👥 1. 4 ta Smena Boshliqlari KPI Reytingi & Kartalari
-- **Smena Liderlari Profili:** Karimov Ilhom, Nizomiddin, Dovud, Ramil va boshqa smena rahbarlarining jonli statistikasi.
-- **KPI Metrikalari:** Xodimlar soni, jami qayta ishlangan birliklar (OPS), xatoliklar soni, tizimdan foydalanish darajasi.
-- **Eng yaxshi zona (Best Zone) & Reyting (Score):** Smenaning eng kuchli natija ko'rsatgan sektori va ball bahosi.
-
-### 📈 2. Interaktiv Grafiklar & Vizual Dinamika (Chart.js)
-- **Umumiy Dinamika:** Barcha 4 smenaning kunlik/oylik reja va fakt bo'yicha solishtirma grafigi.
-- **Botdan Foydalanish Dinamikasi:** Smenalar bo'yicha Telegram/WMS botlaridan foydalanish ko'rsatkichlari (%).
-- **To'g'ri/Noto'g'ri Joylashtirish:** Mahsulot toifalarining to'g'ri joylashtirilish nisbati tahlili.
-- **Xatoliklar Solishtirmasi:** Qayta sanash (*Recount*) va Joylashtirish (*Placement*) xatolarining oylar kesimidagi dinamikasi.
-
-### 📅 3. Oylik Smena Grafigi va Taqvimi
-- 4 ta brigadaning barcha kunlik ish navbatlari va rotatsiya jadvali (Kunduzgi/Tungi smena, dam olish kunlari).
-- Har bir smena a'zolari va brigada tarkibining to'liq tahliliy ro'yxati.
-
-### ⚡ 4. Google Sheets Live Sync (Bulutli Sinxronizatsiya)
-- Google Sheets API / CSV orqali hech qanday qiyinchiliksiz ma'lumotlarni real-vaqt rejimida yuklash.
-- Jadvalga yangi qator kiritilishi bilan dashboard avtomatik tarzda yangi ko'rsatkichlarni hisoblab chiqaradi.
-
-### 🎨 5. Premium Dark UI & Glassmorphism Dizayn
-- Zamonaviy qora/to'q ko'k ranglar palitrasi, nozik neon va gradient aksentlar.
-- Har qanday qurilma (Katta monitorlar, noutbuklar, planshetlar) uchun to'liq moslashuvchan (Responsive).
+### 📌 Ключевые Задачи и Преимущества:
+1. **Оперативный мониторинг 24/7:** Автоматическое отслеживание ключевых показателей производительности (OPS) и выполнения планов по всем 4 сменным бригадам (*Бригада 1, 2, 3, 4*).
+2. **Контроль и минимизация ошибок:** Мгновенное выявление ошибок пересчета (*Пересчет*), некорректного категорийного размещения (*Неправильные категории*) и нулевых актов (*Акт закрыт с нулевым*).
+3. **Мотивация и рейтинг смен (Leaderboard):** Расчет общего рейтинга (Score), определение лучших зон (Best Zone) и оценка эффективности каждого сменного руководителя.
+4. **Сквозная синхронизация с Google Таблицами (Live Sync):** Работает без сложной серверной инфраструктуры — все данные, графики и метрики обновляются напрямую из облачных Google Таблиц в реальном времени.
 
 ---
 
-## 🖼️ Tizim Ko'rinishi (Screenshots Gallery)
+## 🌐 Ссылка на Рабочий Сайт (Live Demo Link)
+
+> 🚀 **Рабочая версия системы доступна онлайн:**
+> **[https://theanvarow.github.io/Werehose-Dashbord/](https://theanvarow.github.io/Werehose-Dashbord/)**
+
+---
+
+## ✨ Основной Функционал (Key Features)
+
+### 👥 1. Карточки и Рейтинг Начальников Смен
+- **Профили Руководителей:** Детальная информация по каждому начальнику смены (*Каримов Ильхом, Низомиддин, Довуд, Рамиль*).
+- **Сводные Метрики:** Количество сотрудников в смене, фактический объем операций (OPS), динамика выполнения плана, процент использования системных ботов.
+- **Индивидуальный статус:** Текущий фокус месяца, задачи и итоговый балл (Score).
+
+### 📈 2. Интерактивная Аналитика и Графики (Chart.js)
+- **Общая Динамика Смен:** Сравнительный анализ производительности и объемов обработки грузов по всем 4 сменам.
+- **Статистика Использования Бота:** Процентная динамика взаимодействия персонала со складскими ботами по дням.
+- **Категорийное Размещение:** Доля безошибочного и ошибочного распределения товаров по зонам хранения.
+- **Анализ Ошибок по Месяцам:** Сопоставление инцидентов пересчета и размещения товаров.
+
+### 📅 3. Месячный График и Календарь Смен
+- Наглядный календарь рабочих смен, ротации бригад (дневные/ночные смены, выходные дни).
+- Справочник состава бригад и зон ответственности.
+
+### ⚡ 4. Real-Time Синхронизация с Google Таблицами
+- Интеграция через Google Sheets API / CSV.
+- Любое изменение, внесенное оператором в таблицу, мгновенно отображается на дашборде без перезапуска системы.
+
+### 🎨 5. Премиальный Dark UI & Glassmorphism Дизайн
+- Тёмная неоновая палитра, оптимизированная для круглосуточной работы на терминалах и больших экранах.
+- Полная адаптивность: мониторы, ноутбуки, планшеты и смартфоны.
+
+---
+
+## 🖼️ Скриншоты Интерфейса (Screenshots)
 
 <div align="center">
 
-### 🖥️ Asosiy Boshqaruv Paneli (Main Dashboard View)
-![Main Dashboard](image/dashboard_preview.png)
+### 🖥️ Главная Панель Мониторинга (Dashboard Overview)
+![Главная Панель](image/dashboard_preview.png)
 
-### 📊 Batafsil To'liq Skrinshot (Full High-Resolution Overview)
-![Full Dashboard](image/dashboard_full.png)
+### 📊 Полноразмерный Обзор Системы (Full Dashboard View)
+![Полный Дашборд](image/dashboard_full.png)
 
 </div>
 
 ---
 
-## 🏗️ Texnologiyalar Staki (Tech Stack)
+## 🏗️ Технологический Стек (Tech Stack)
 
-| Qatlam | Texnologiya | Tavsif |
+| Слой | Технологии | Описание |
 | :--- | :--- | :--- |
-| **Frontend** | `HTML5`, `CSS3 (Vanilla)`, `JavaScript (ES6+)` | Tezkor, yengil va mustaqil mijoz tomoni arxitekturasi |
-| **Vizualizatsiya** | `Chart.js v4` | Interaktiv bar, line va dinamik analitik grafiklar |
-| **Ma'lumotlar Bazasi** | `Google Sheets API / CSV Engine` | Oddiy va qulay bulutli ma'lumotlar boshqaruvi |
-| **Dizayn Uslubi** | `Dark Mode Glassmorphism` | Professional omborxona terminallari uchun ko'zga qulay dizayn |
+| **Frontend** | `HTML5`, `CSS3 (Vanilla)`, `JavaScript (ES6+)` | Быстрый, легкий интерфейс без лишних фреймворков |
+| **Визуализация** | `Chart.js v4` | Интерактивные графики, круговые диаграммы и тренды |
+| **Хранилище Данных** | `Google Sheets API / Cloud CSV` | Простое, надежное облачное управление данными |
+| **Хостинг** | `GitHub Pages` | Быстрый и отказоустойчивый глобальный деплой |
 
 ---
 
-## 📑 Google Sheets Ma'lumotlar Strukturasi (Data Schema)
+## 📑 Структура Данных Google Таблицы (Data Schema)
 
-Jadval ma'lumotlari 2 xil formatdagi qatorlar orqali to'ldiriladi:
+Данные в таблице разделяются на 2 типа строк:
+1. `shift` — индивидуальные KPI показатели для 4 начальников смен.
+2. `table` — общая аналитика и расширенная таблица смен.
 
-```
-1. shift  -> 4 ta smena boshliqlari KPI ma'lumotlari uchun
-2. table  -> Umumiy smenalar tahlili va katta hisobot jadvali uchun
-```
+### 📋 Описание Столбцов:
 
-### 📋 Asosiy Ustunlar Tavsifi:
-
-| Ustun Nomi | Turi | Tavsif |
+| Название Столбца | Тип | Описание |
 | :--- | :--- | :--- |
-| `entry_type` | `String` | Qator turi: `shift` yoki `table` |
-| `month` | `String` | Hisobot oyi (masalan: `yanvar`, `fevral`, `mart`, `aprel`) |
-| `shift_key` | `String` | Smena identifikatori: `shift1`, `shift2`, `shift3`, `shift4` |
-| `name` / `leader_name` | `String` | Smena boshlig'i F.I.O. (masalan: `Karimov Ilhom`) |
-| `employees` | `Number` | Smenadagi xodimlar soni |
-| `ops` / `fact_ops` | `Number` | Bajarilgan jami operatsiyalar (OPS soni) |
-| `errors` / `fact_errors` | `Number` | Jami qayd etilgan xatoliklar soni |
-| `recountManager` | `String` | Qayta sanash (*Пересчет*) menejeri F.I.O. |
-| `recountOps` | `Number` | Qayta sanash bo'yicha bajarilgan operatsiyalar |
-| `placementManager1/2` | `String` | Joylashtirish (*Размещение*) menejerlari |
-| `placementOps1/2` | `Number` | Joylashtirish bo'yicha OPS ko'rsatkichlari |
-| `actClosedZero` | `Number` | Nollik yopilgan aktlar soni (*Акт закрыт с нулевым*) |
-| `recountErrors` | `Number` | Qayta sanashdagi xatolar soni |
-| `placementErrors` | `Number` | Joylashtirishdagi xatolar soni |
-| `botUsageStats` | `Percentage` | Telegram/WMS botidan foydalanish foizi (%) |
-| `wrongCategoryPlacement` | `Percentage` | Noto'g'ri toifaga joylashtirilgan tovarlar foizi (%) |
+| `entry_type` | `String` | Тип строки: `shift` или `table` |
+| `month` | `String` | Отчетный месяц (`yanvar`, `fevral`, `mart`, `aprel`...) |
+| `shift_key` | `String` | Ключ смены: `shift1`, `shift2`, `shift3`, `shift4` |
+| `name` / `leader_name` | `String` | Ф.И.О. начальника смены |
+| `employees` | `Number` | Количество сотрудников в смене |
+| `ops` / `fact_ops` | `Number` | Общее количество операций (OPS) |
+| `errors` / `fact_errors` | `Number` | Количество зафиксированных ошибок |
+| `recountManager` | `String` | Ф.И.О. менеджера пересчета |
+| `recountOps` | `Number` | OPS по пересчету |
+| `placementManager1/2` | `String` | Ф.И.О. менеджеров размещения |
+| `placementOps1/2` | `Number` | OPS по размещению |
+| `actClosedZero` | `Number` | Количество актов, закрытых с нулевым результатом |
+| `recountErrors` | `Number` | Количество ошибок пересчета |
+| `placementErrors` | `Number` | Количество ошибок размещения |
+| `botUsageStats` | `Percentage` | Процент использования бота сотрудниками (%) |
+| `wrongCategoryPlacement` | `Percentage` | Доля неправильно размещенных категорий (%) |
 
 ---
 
-## 🚀 Ishga Tushirish va O'rnatish (Quick Start)
+## 🚀 Быстрый Старт и Локальный Запуск (Quick Start)
 
-### 1. Repozitoriyani klonlash:
+### 1. Клонирование репозитория:
 ```bash
 git clone https://github.com/theanvarow/Werehose-Dashbord.git
 cd Werehose-Dashbord
 ```
 
-### 2. Mahalliy kompyuterda ochish:
-Loyihani ishga tushirish uchun hech qanday murakkab server o'rnatish talab etilmaydi. Shunchaki `index.html` faylini istalgan brauzerda oching yoki local server orqali ishga tushiring:
+### 2. Запуск в браузере:
+Просто откройте файл `index.html` в любом современном браузере или запустите локальный сервер:
 
 ```bash
-# Python orqali:
+# Через Python:
 python3 -m http.server 8080
 
-# Yoki Node.js (npx serve) orqali:
+# Или через Node.js (npx serve):
 npx serve .
 ```
 
-Brauzerda oching: `http://localhost:8080`
+Перейдите по адресу: **`http://localhost:8080`**
 
 ---
 
-## 📁 Loyiha Tuzilishi (Directory Structure)
+## 📁 Структура Репозитория (File Structure)
 
 ```plaintext
 Werehose-Dashbord/
-├── index.html                  # Asosiy dashboard sahifasi va barcha UI mantiqi
-├── google_sheets_template.csv  # Google Sheets uchun andoza jadval
-├── GOOGLE_SHEETS_USTUNLAR.txt  # Jadval ustunlari va to'ldirish qo'llanmasi
-├── image/                      # Smena rahbarlari rasmlari, logotiplar va skrinshotlar
-│   ├── big-logo.webp           # Uzum Market logotipi
-│   ├── dashboard_preview.png   # Dashboard asosiy skrinshoti
-│   ├── dashboard_full.png      # To'liq ekran skrinshoti
-│   ├── Ilhom.jpg               # Smena 1 rahbari
-│   ├── Nizim.jpg               # Smena 2 rahbari
-│   ├── dovud.png               # Smena 3 rahbari
-│   └── ramil.jpg               # Smena 4 rahbari
-└── README.md                   # Loyiha hujjatlari va qo'llanma
+├── index.html                  # Главная страница дашборда и весь функционал UI
+├── google_sheets_template.csv  # Шаблон структуры Google Таблицы
+├── GOOGLE_SHEETS_USTUNLAR.txt  # Документация по колонкам и правилам заполнения
+├── image/                      # Изображения, аватары смен, логотип и скриншоты
+│   ├── big-logo.webp           # Официальный логотип Uzum Market
+│   ├── dashboard_preview.png   # Превью главного экрана дашборда
+│   ├── dashboard_full.png      # Полный скриншот системы
+│   ├── Ilhom.jpg               # Начальник смены 1
+│   ├── Nizim.jpg               # Начальник смены 2
+│   ├── dovud.png               # Начальник смены 3
+│   └── ramil.jpg               # Начальник смены 4
+└── README.md                   # Документация проекта на русском языке
 ```
 
 ---
 
-## 👨‍💻 Muallif va Bog'lanish (Author)
+## 👨‍💻 Автор и Контакты (Author)
 
-- **Muallif:** Sirojiddin Anvarov ([@theanvarow](https://github.com/theanvarow))
-- **Loyiha:** Uzum Market Logistics & Warehouse Operations Management
-- **GitHub:** [https://github.com/theanvarow](https://github.com/theanvarow)
+- **Автор:** Сирожиддин Анваров ([@theanvarow](https://github.com/theanvarow))
+- **Проект:** Uzum Market Logistics & Warehouse Operations Management
+- **Репозиторий:** [https://github.com/theanvarow/Werehose-Dashbord](https://github.com/theanvarow/Werehose-Dashbord)
+- **Live Сайт:** [https://theanvarow.github.io/Werehose-Dashbord/](https://theanvarow.github.io/Werehose-Dashbord/)
 
 ---
 
 <div align="center">
-⭐ Agar ushbu loyiha sizga ma'qul kelgan bo'lsa, GitHub'da <b>Star</b> bosishni unutmang! ⭐
+⭐ Если вам понравился этот проект, поддержите его, поставив <b>Star</b> на GitHub! ⭐
 </div>
